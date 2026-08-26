@@ -12,8 +12,8 @@ import nullLogo from "./../assets/Null.png";
 import cyndiaLogo from "./../assets/cyndia.svg"; 
 import piratesLogo from "./../assets/Pirates.png"; 
 import alumni from "./../assets/Alumni.jpg"
-import rnb from "./../assets/achievements/RednBlue.png"
-import Secure from "./../assets/achievements/CyberSecure.png"
+import rnb from "./../assets/achievements/RednBlue.webp"
+import Secure from "./../assets/achievements/CyberSecure.webp"
 // Dot Spotlight Component
 function DotSpotlight() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
