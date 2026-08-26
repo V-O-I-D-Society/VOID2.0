@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import void_logo from "./../assets/Void Society logo.svg";
+import GlassSurface from "./../components/ui/GlassSurface/GlassSurface";
 import "./../index.css";
 
 export default function Navbar() {
@@ -10,38 +11,54 @@ export default function Navbar() {
 
   return (
     <nav className="navbar_about">
-      {/* Logo */}
-      <img
-        src={void_logo}
-        alt="Logo"
-        className="navbar_logo"
-        onClick={closeMenu}
-      />
-
-      {/* Desktop nav */}
-      <div className="navbar_about_left flex-grow justify-center navbar_desktop_only">
-        <Link to="/" className="navbar_link">Home</Link>
-        <Link to="/about-us" className="navbar_link">About</Link>
-        <Link to="/contact-us" className="navbar_link">Contact</Link>
-        <Link to="/blogs" className="navbar_link">Blogs</Link>
-        <Link to="/FAQ" className="navbar_link">FAQ</Link>
-      </div>
-
-      <div className="navbar_about_right navbar_desktop_only">
-        <Link to="/resources" className="navbar_link">Resources</Link>
-        <Link to="/terminal" className="navbar_link">CLI</Link>
-      </div>
-
-      {/* Hamburger button (mobile only) */}
-      <button
-        aria-label="Toggle navigation menu"
-        className={`navbar_toggle ${isMenuOpen ? "open" : ""}`}
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      <GlassSurface
+        width="100%"
+        height={60}
+        borderRadius={999}
+        borderWidth={0.05}
+        brightness={55}
+        opacity={0.9}
+        blur={12}
+        backgroundOpacity={0.12}
+        saturation={1.2}
+        className="navbar_glass"
+        style={{ maxWidth: "1100px", margin: "0 auto" }}
       >
-        <span className="bar"></span>
-        <span className="bar"></span>
-        <span className="bar"></span>
-      </button>
+        <div className="flex w-full items-center justify-between gap-2 px-4">
+          {/* Logo */}
+          <img
+            src={void_logo}
+            alt="Logo"
+            className="navbar_logo"
+            onClick={closeMenu}
+          />
+
+          {/* Desktop nav */}
+          <div className="navbar_about_left navbar_desktop_only">
+            <Link to="/" className="navbar_link">Home</Link>
+            <Link to="/about-us" className="navbar_link">About</Link>
+            <Link to="/contact-us" className="navbar_link">Contact</Link>
+            <Link to="/blogs" className="navbar_link">Blogs</Link>
+            <Link to="/FAQ" className="navbar_link">FAQ</Link>
+          </div>
+
+          <div className="navbar_about_right navbar_desktop_only">
+            <Link to="/resources" className="navbar_link">Resources</Link>
+            <Link to="/terminal" className="navbar_link">CLI</Link>
+          </div>
+
+          {/* Hamburger button (mobile only) */}
+          <button
+            aria-label="Toggle navigation menu"
+            className={`navbar_toggle ${isMenuOpen ? "open" : ""}`}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </button>
+        </div>
+      </GlassSurface>
 
       {/* Overlay */}
       {isMenuOpen && (

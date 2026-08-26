@@ -1,19 +1,40 @@
 import React from "react";
-import kali from "./../assets/web.svg";
+import { Link } from "react-router-dom";
+import kali from "./../assets/HS/web.svg";
 import Navbar from "./../components/navbar";
 import Footer from "./../components/footer";
 import { useRef, useState, useEffect } from "react";
-import breach from "./../assets/achievements/Breacheverse.jpg";
-import nullkiet from "./../assets/achievements/Null-Ghaziabad.jpg";
-import nullmeetup from "./../assets/achievements/Null-meetup.jpg";
-import school from "./../assets/achievements/School.jpg"
-import LinuxBootcamp from "./../assets/achievements/LinuxBootcamp.jpg"
-import nullLogo from "./../assets/Null.png"; 
-import cyndiaLogo from "./../assets/cyndia.svg"; 
-import piratesLogo from "./../assets/Pirates.png"; 
-import alumni from "./../assets/Alumni.jpg"
+import breach from "./../assets/HS/achievements/Breacheverse.jpg";
+import nullkiet from "./../assets/HS/achievements/Null-Ghaziabad.jpg";
+import nullmeetup from "./../assets/HS/achievements/Null-meetup.jpg";
+import school from "./../assets/HS/achievements/School.jpg"
+import LinuxBootcamp from "./../assets/HS/achievements/LinuxBootcamp.jpg"
+import nullLogo from "./../assets/Null.png";
+import cyndiaLogo from "./../assets/cyndia.svg";
+import piratesLogo from "./../assets/HS/Pirates.png";
+import alumni from "./../assets/HS/Alumni.jpg"
 import rnb from "./../assets/achievements/RednBlue.webp"
 import Secure from "./../assets/achievements/CyberSecure.webp"
+import AccordionGallery from "./../components/ui/AccordionGallery/AccordionGallery";
+
+const achievementItems = [
+  { image: rnb, link: "#", title: "RED N BLUE — Grand Finale of CyberSecureX1.0", description: "The VOID Society, under the guidance of the CSE Department at KIET Group of Institutions, hosted RED N BLUE, a 24-hour offline CTF where the top 10 teams from online qualifiers battled in a real-world cyber range with live servers and firewalls. Inspired by a Resident Evil–themed storyline, Red Teams hacked into Umbrella Corp’s systems to stop a nuclear threat while Blue Teams defended critical networks against intrusions. With nonstop action, teamwork, and incident response, this became one of India’s first large-scale offline CTFs — an immersive cyber experience that tested skill, strategy, and resilience." },
+  { image: nullkiet, link: "#", title: "Null – Ghaziabad Chapter at KIET", description: "Null is India’s largest open security community, and we are proud to operate its Ghaziabad Chapter in collaboration with our Centre of Excellence (COE). The chapter serves as a vibrant platform that connects students, faculty, and industry professionals through regular meetups and interactive sessions. These gatherings focus on the latest cybersecurity trends, real-world case studies, and occasionally even discussions on recently discovered CVEs, ensuring participants stay updated with industry practices. The initiative has created a valuable bridge between academia and industry, opening doors for internships and job opportunities for our students while fostering collaboration across the cybersecurity community. The very first event of the Null Ghaziabad Chapter was a resounding success, attracting more than 100 participants from outside the college." },
+  { image: nullmeetup, link: "#", title: "Null Meetup 2024–25", description: "As part of the 2024–25 session, we successfully hosted the next Null Meetup under the Ghaziabad Chapter. The event featured insightful sessions by Dr. D3 and Youghal Pathak, two highly respected figures in the Indian cybersecurity space and contributors to the Government of India’s cybersecurity initiatives. Their expertise and real-world perspectives provided participants with valuable knowledge on evolving threats and defensive strategies. Adding to the significance of the meetup, the founders of Hackitise Labs were also present, creating an excellent opportunity for students and professionals to interact directly with leading innovators in the field." },
+  { image: breach, link: "#", title: "Breachverse Bootcamp", description: "The Breachverse Bootcamp was a successfully organized paid program focused on introducing first-year students to the world of Ethical Hacking. With over 50 enthusiastic participants, the bootcamp provided a strong foundation in real-world hacking techniques, delivered through practical and hands-on demonstrations. The sessions were conducted by the Coordinator of our Centre of Excellence, ensuring that students received expert guidance and exposure to industry-relevant practices." },
+  { image: LinuxBootcamp, link: "#", title: "Linux Bootcamp – September 2024", description: "In September 2024, we organized a Linux Bootcamp designed to take participants from the basics to advanced concepts in system usage and administration. The bootcamp was conducted by the Coordinators of our Centre of Excellence, ensuring expert guidance and a structured learning experience. With 50 registered participants, the program offered hands-on exposure to essential Linux commands, shell scripting, system management, and advanced features that are vital for both developers and cybersecurity enthusiasts." },
+  { image: Secure, link: "#", title: "Ethical Hacking Bootcamp – June 2025", description: "As part of the CyberSecureX event organized by the CSE Department, our Centre of Excellence successfully conducted an Ethical Hacking Bootcamp in June 2025. What made this initiative unique was that it was entirely managed by students, showcasing their organizational and technical capabilities. The bootcamp received an overwhelming response with 100+ paid registrations, making it one of our most impactful training events." },
+  { image: school, link: "#", title: "Awareness Campaign – 5 Schools", description: "Our Centre of Excellence conducted a Cyber Awareness Campaign across five schools in the region, reaching out to over 200+ students. The sessions were designed to be interactive and age-appropriate, covering essential topics such as safe internet practices, protection against cyberbullying, responsible use of social media, and recognizing online scams. The initiative not only educated young students on digital safety but also sparked curiosity about cybersecurity as a career path." }
+];
+
+// Accordion items derived from achievements for the AccordionGallery section
+const accordionItems = achievementItems.map(({ image, title, description }) => ({
+  image,
+  label: title,
+  link: "#",
+  description
+}));
+
 // Dot Spotlight Component
 function DotSpotlight() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -315,75 +336,54 @@ export default function VoidPage() {
       </div>
 
 {/* IRC Section */}
-<div className="irc-section">
-  <div className="irc-panel-container" style={{ width: "100%", height: "500px" }}>
-    <iframe
-      src="https://web.libera.chat/#void-society"
-      title="IRC Chat"
-      className="irc-panel"
-      style={{
-        width: "100%",
-        height: "100%",
-        border: "none",
-        borderRadius: "8px",
-      }}
-    ></iframe>
+<section className="irc-section">
+  <div className="mx-auto w-full max-w-3xl px-4 py-20 text-center">
+    <div className="space-y-6">
+      <span className="inline-block rounded-full border border-[#00ffff]/40 bg-[#00ffff]/10 px-4 py-1 text-xs uppercase tracking-widest text-[#00ffff]">
+        Community
+      </span>
+      <h2 className="irc-heading">Join our IRC Channel</h2>
+      <p className="mx-auto max-w-2xl text-white/75">
+        And be part of our vibrant community. Connect, collaborate, and share your
+        passion for cybersecurity with like-minded individuals.
+      </p>
+      <div>
+        <Link
+          to="/irc"
+          className="inline-flex items-center gap-2 rounded-full bg-[#00ffff] px-8 py-3 font-semibold text-black transition-transform hover:scale-105"
+        >
+          Open IRC Chat <span aria-hidden="true">&rarr;</span>
+        </Link>
+      </div>
+    </div>
   </div>
-  <div className="irc-text-container">
-    <h2 className="irc-heading">Join our IRC Channel</h2>
-    <p className="irc-description">
-      And be part of our vibrant community. Connect, collaborate, and share your
-      passion for cybersecurity with like-minded individuals.
-    </p>
-  </div>
-</div>
+</section>
 {/* let it deploy */}
 
       {/* Achievements Section */}
       <section className="achievements-section">
         <h2 className="section-title">Our Events</h2>
         <p className="section-subtitle">Recognized for excellence and innovation in cybersecurity solutions.</p>
-        <div className="achievements-grid">
-          <AchievementCard
-            title="RED N BLUE — Grand Finale of CyberSecureX1.0"
-            description="The VOID Society, under the guidance of the CSE Department at KIET Group of Institutions, hosted RED N BLUE, a 24-hour offline CTF where the top 10 teams from online qualifiers battled in a real-world cyber range with live servers and firewalls. Inspired by a Resident Evil–themed storyline, Red Teams hacked into Umbrella Corp’s systems to stop a nuclear threat while Blue Teams defended critical networks against intrusions. With nonstop action, teamwork, and incident response, this became one of India’s first large-scale offline CTFs — an immersive cyber experience that tested skill, strategy, and resilience."
-            imageUrl={rnb}
-          />
-          <AchievementCard
-            title="Null – Ghaziabad Chapter at KIET"
-            description=" Null is India’s largest open security community, and we are proud to operate its Ghaziabad Chapter in collaboration with our Centre of Excellence (COE). The chapter serves as a vibrant platform that connects students, faculty, and industry professionals through regular meetups and interactive sessions. These gatherings focus on the latest cybersecurity trends, real-world case studies, and occasionally even discussions on recently discovered CVEs, ensuring participants stay updated with industry practices.
-The initiative has created a valuable bridge between academia and industry, opening doors for internships and job opportunities for our students while fostering collaboration across the cybersecurity community. With its strong emphasis on knowledge-sharing and networking, the chapter has quickly become a hub for aspiring and experienced professionals alike.
-The very first event of the Null Ghaziabad Chapter was a resounding success, attracting more than 100 participants from outside the college. This overwhelming response highlights the growing relevance of cybersecurity and the chapter’s role in shaping a community-driven ecosystem for learning and professional growth."
-            imageUrl={nullkiet}
-          />
-          <AchievementCard
-            title="Null Meetup 2024–25"
-            description=" As part of the 2024–25 session, we successfully hosted the next Null Meetup under the Ghaziabad Chapter. The event featured insightful sessions by Dr. D3 and Youghal Pathak, two highly respected figures in the Indian cybersecurity space and contributors to the Government of India’s cybersecurity initiatives. Their expertise and real-world perspectives provided participants with valuable knowledge on evolving threats and defensive strategies.
-Adding to the significance of the meetup, the founders of Hackitise Labs were also present, creating an excellent opportunity for students and professionals to interact directly with leading innovators in the field. Beyond technical learning, the event served as a powerful networking platform, enabling participants to connect with experts and peers, exchange ideas, and explore future opportunities in the cybersecurity domain.
-"
-            imageUrl={nullmeetup}
-          />
-          <AchievementCard
-            title="Breachverse Bootcamp"
-            description="The Breachverse Bootcamp was a successfully organized paid program focused on introducing first-year students to the world of Ethical Hacking. With over 50 enthusiastic participants, the bootcamp provided a strong foundation in real-world hacking techniques, delivered through practical and hands-on demonstrations. The sessions were conducted by the Coordinator of our Centre of Excellence, ensuring that students received expert guidance and exposure to industry-relevant practices. This initiative not only built technical awareness but also created a platform for young learners to explore cybersecurity in a structured and engaging manner. The overwhelming response and participation highlighted the growing interest in cybersecurity and made the bootcamp a remarkable achievement for our team.
-"
-            imageUrl={breach}
-          />
-          <AchievementCard
-            title="Linux Bootcamp – September 2024"
-            description="In September 2024, we organized a Linux Bootcamp designed to take participants from the basics to advanced concepts in system usage and administration. The bootcamp was conducted by the Coordinators of our Centre of Excellence, ensuring expert guidance and a structured learning experience. With 50 registered participants, the program offered hands-on exposure to essential Linux commands, shell scripting, system management, and advanced features that are vital for both developers and cybersecurity enthusiasts. This paid initiative received an excellent response, reflecting the strong demand for practical Linux skills and the effectiveness of our applied learning approach.
-"
-            imageUrl={LinuxBootcamp}
-          />
-          <AchievementCard
-            title="Ethical Hacking Bootcamp – June 2025"
-            description="As part of the CyberSecureX event organized by the CSE Department, our Centre of Excellence successfully conducted an Ethical Hacking Bootcamp in June 2025. What made this initiative unique was that it was entirely managed by students, showcasing their organizational and technical capabilities. The bootcamp received an overwhelming response with 100+ paid registrations, making it one of our most impactful training events. Participants gained practical exposure to real-world hacking techniques, security tools, and hands-on demonstrations, strengthening their understanding of modern cybersecurity practices. This achievement reflects both the enthusiasm of our students and the growing demand for structured cybersecurity learning opportunities."
-            imageUrl={Secure}
-          />
-          <AchievementCard
-            title="Awareness Campaign – 5 Schools"
-            description="Our Centre of Excellence conducted a Cyber Awareness Campaign across five schools in the region, reaching out to over 200+ students.. The sessions were designed to be interactive and age-appropriate, covering essential topics such as safe internet practices, protection against cyberbullying, responsible use of social media, and recognizing online scams. To make the learning engaging, we included live demonstrations, visual handouts, and relatable real-life examples. The initiative not only educated young students on digital safety but also sparked curiosity about cybersecurity as a career path, leaving a lasting impact on both students and faculty."
-            imageUrl= {school}
+        <div style={{ position: 'relative' }}>
+          <AccordionGallery
+            items={accordionItems}
+            defaultIndex={2}
+            expandRatio={0.52}
+            trigger="hover"
+            accentColor="#00ffff"
+            overlayColor="#060010"
+            textColor="#ffffff"
+            grayscale
+            showLabels
+            duration={0.6}
+            ease="power3.out"
+            parallax={0.5}
+            tilt={8}
+            stagger={0.06}
+            height={460}
+            gap={10}
+            radius={16}
+            orientation="horizontal"
           />
         </div>
       </section>
