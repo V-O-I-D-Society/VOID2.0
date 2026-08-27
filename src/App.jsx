@@ -8,6 +8,7 @@ import Achievements from './pages/achievement.jsx';
 import AboutUs from './pages/about-Us.jsx';
 import Resources from './pages/resources.jsx';
 import ContactUs from './pages/contact-Us.jsx';
+import Register from './pages/register.jsx';
 import IrcPage from './pages/irc.jsx';
 import FAQPage from './pages/FAQ.jsx';
 import BlogPostPage from './pages/BlogPostPage.jsx';
@@ -46,6 +47,7 @@ function App() {
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/resources" element={<Resources />} />
   <Route path="/contact-us" element={<ContactUs />} />
+  <Route path="/register" element={<Register />} />
   <Route path="/irc" element={<IrcPage />} />
   <Route path="/FAQ" element={<FAQPage />} />
       </Routes>

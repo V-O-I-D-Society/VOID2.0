@@ -37,6 +37,7 @@ export default function Navbar() {
           <div className="navbar_about_left navbar_desktop_only">
             <Link to="/" className="navbar_link">Home</Link>
             <Link to="/about-us" className="navbar_link">About</Link>
+            <Link to="/register" className="navbar_link">Register</Link>
             <Link to="/contact-us" className="navbar_link">Contact</Link>
             <Link to="/blogs" className="navbar_link">Blogs</Link>
             <Link to="/FAQ" className="navbar_link">FAQ</Link>
@@ -73,6 +74,7 @@ export default function Navbar() {
         <div className="navbar_mobile_group">
           <Link to="/" className="navbar_link" onClick={closeMenu}>Home</Link>
           <Link to="/about-us" className="navbar_link" onClick={closeMenu}>About</Link>
+          <Link to="/register" className="navbar_link" onClick={closeMenu}>Register</Link>
           <Link to="/contact-us" className="navbar_link" onClick={closeMenu}>Contact</Link>
           <Link to="/blogs" className="navbar_link" onClick={closeMenu}>Blogs</Link>
           <Link to="/resources" className="navbar_link" onClick={closeMenu}>Resources</Link>
