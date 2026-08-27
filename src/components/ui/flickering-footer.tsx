@@ -388,8 +388,14 @@ export const Component = () => {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/10 px-6 py-6">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 text-sm text-[#8493A8] md:flex-row">
+      <div
+        className="border-t border-white/10 px-6"
+        style={{
+          paddingTop: "1.5rem",
+          paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))",
+        }}
+      >
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 text-sm text-white md:flex-row">
           <p>&copy; {new Date().getFullYear()} VOID Society. All Rights Reserved.</p>
           <p className="flex items-center gap-2">
             JOIN US ! 

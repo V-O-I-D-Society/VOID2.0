@@ -16,6 +16,9 @@ import alumni from "./../assets/HS/Alumni.jpg"
 import rnb from "./../assets/achievements/RednBlue.webp"
 import Secure from "./../assets/achievements/CyberSecure.webp"
 import AccordionGallery from "./../components/ui/AccordionGallery/AccordionGallery";
+import HaosShowcase from "./../components/ui/tech-solutions-hero-section";
+import DarkVeil from "./../components/ui/DarkVeil";
+import ParticleText from "./../components/ui/ParticleText";
 
 const achievementItems = [
   { image: rnb, link: "#", title: "RED N BLUE — Grand Finale of CyberSecureX1.0", description: "The VOID Society, under the guidance of the CSE Department at KIET Group of Institutions, hosted RED N BLUE, a 24-hour offline CTF where the top 10 teams from online qualifiers battled in a real-world cyber range with live servers and firewalls. Inspired by a Resident Evil–themed storyline, Red Teams hacked into Umbrella Corp’s systems to stop a nuclear threat while Blue Teams defended critical networks against intrusions. With nonstop action, teamwork, and incident response, this became one of India’s first large-scale offline CTFs — an immersive cyber experience that tested skill, strategy, and resilience." },
@@ -254,35 +257,49 @@ export default function VoidPage() {
     <div className="">
       <Navbar />
       
-      {/* Hero Section with SVG Background for Mobile */}
-      <div className="hero-section">
-        {/* Dot Spotlight Background */}
-        <DotSpotlight />
-        
-        {/* Invisible overlay for mouse tracking */}
-        <div className="hero-interaction-layer"></div>
-        
-        {/* About Description */}
-        <div className="about_desc z-30">
-          <div className="about-club ">
-            <h1 className="about-club-h1 ">
-              Enter into the Cyber Arena with VOID
-            </h1>
-            <p className="text-sm text-white  max-w-[60ch] ">
-              Only Cybersecurity and ethical hacking club of KIET Group of Institutions.
-            </p>
-                {/* glowing buttons */}
-               <GlowingButton />
-          </div>
-        </div>
-
-        {/* Kali SVG - Background on Mobile, Normal on Desktop */}
-        <div className="kali_svg_div">
-        <img src={kali} alt="kali" className="kali_svg" />
-        </div>
-      </div>
-
-
+      {/* Hero Section — Tech Solutions Showcase (redesign in progress) */}
+      <HaosShowcase
+        bg={<DarkVeil hueShift={200} speed={0.5} />}
+        category="VOID SOCIETY"
+        year="2026"
+        solutionLabel="TECH"
+        solutionValue="CYBERSECURITY"
+        title="Enter into the Cyber Arena with VOID"
+        subtitle="Only Cybersecurity and ethical hacking club of KIET Group of Institutions."
+        statLabel="ETHICAL HACKING"
+        statValue="CYBERSECURITY CLUB"
+        bottomValue="+22"
+        progressPercent={60}
+        logoText="VOID"
+        logo={
+          <ParticleText
+            text="VOID"
+            particleSize={2.2}
+            density={4}
+            color="#f8fafc"
+            highlightColor="#4DA3FF"
+            scatter={190}
+            gatherDuration={1600}
+            stagger={420}
+            pointerRepel={42}
+            repelRadius={120}
+            idleDrift={0.8}
+            trigger="mount"
+            fontSize="clamp(3.5rem, 13vw, 9rem)"
+            fontWeight={800}
+            fontFamily="inherit"
+            glow
+          />
+        }
+        actionLabel="JOIN US"
+        onAction={() => {
+          const target =
+            document.querySelector(".irc-section") ||
+            document.querySelector(".mobile-features-section") ||
+            document.querySelector(".achievements-section");
+          target?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }}
+      />
 
 {/* testing tailwind */}
 {/* <div className="bg-blue-500 text-green-500 p-4 m-4 rounded-lg shadow-lg">
