@@ -428,7 +428,21 @@
 }
 
 .navbar-staggered .staggered-menu-panel {
-  background: rgba(12, 12, 18, 0.72);
+  background: transparent;
+  backdrop-filter: none;
+}
+
+/* Fluid glass background inside the menu panel (GlassSurface, same as navbar) */
+.navbar-staggered .sm-glass-surface {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.navbar-staggered .sm-panel-inner {
+  position: relative;
+  z-index: 1;
 }
 
 .navbar-staggered .sm-panel-item {

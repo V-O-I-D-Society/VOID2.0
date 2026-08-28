@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import { Fragment, useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import type { CSSProperties, ElementType } from 'react';
 import { gsap } from 'gsap';
 
@@ -137,6 +137,10 @@ const MaskedHeading: React.FC<MaskedHeadingProps> = ({
     let clock = 0;
 
     const frame = (now: number) => {
+      if (document.hidden) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       clock += dt;
@@ -169,9 +173,14 @@ const MaskedHeading: React.FC<MaskedHeadingProps> = ({
       offsetRef.current.ty = 0;
     };
 
-    root.addEventListener('pointermove', onMove);
-    root.addEventListener('pointerleave', onLeave);
-    raf = requestAnimationFrame(frame);
+    // Continuous drift/parallax only matters when those are enabled. Without
+    // them the heading is static after its reveal, so skip the rAF loop
+    // entirely (the reveal itself is a finite GSAP tween).
+    if (settingsRef.current.drift !== 0 || settingsRef.current.parallax > 0) {
+      root.addEventListener('pointermove', onMove);
+      root.addEventListener('pointerleave', onLeave);
+      raf = requestAnimationFrame(frame);
+    }
 
     return () => {
       cancelAnimationFrame(raf);
@@ -296,21 +305,23 @@ const MaskedHeading: React.FC<MaskedHeadingProps> = ({
     >
       <span ref={measureRef} className="text-transparent">
         {words.map((word, i) => (
-          <span
-            key={`${word}-${i}`}
-            ref={(el: HTMLSpanElement | null) => {
-              wordRefs.current[i] = el;
-            }}
-            className="inline-block whitespace-pre [&:not(:last-child)]:after:content-['\\00a0']"
-          >
-            {word}
-            <i
-              ref={(el: HTMLElement | null) => {
-                baseRefs.current[i] = el;
+          <Fragment key={`${word}-${i}`}>
+            <span
+              ref={(el: HTMLSpanElement | null) => {
+                wordRefs.current[i] = el;
               }}
-              className="inline-block w-0 h-0"
-            />
-          </span>
+              className="inline-block whitespace-pre"
+            >
+              {word}
+              <i
+                ref={(el: HTMLElement | null) => {
+                  baseRefs.current[i] = el;
+                }}
+                className="inline-block w-0 h-0"
+              />
+            </span>
+            {i < words.length - 1 ? ' ' : null}
+          </Fragment>
         ))}
       </span>
 

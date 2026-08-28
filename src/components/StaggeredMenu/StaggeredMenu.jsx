@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { Link } from 'react-router-dom';
+import GlassSurface from '../ui/GlassSurface/GlassSurface';
 import './StaggeredMenu.css';
 
 export const StaggeredMenu = ({
@@ -418,6 +419,21 @@ export const StaggeredMenu = ({
       </header>
 
       <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!effectiveOpen}>
+        {/* Fluid glass background (same GlassSurface effect as the navbar) */}
+        {effectiveOpen && (
+          <GlassSurface
+            className="sm-glass-surface"
+            width="100%"
+            height="100%"
+            borderRadius={0}
+            borderWidth={0}
+            brightness={55}
+            opacity={0.9}
+            blur={12}
+            backgroundOpacity={0.12}
+            saturation={1.2}
+          />
+        )}
         <div className="sm-panel-inner">
           <ul className="sm-panel-list" role="list" data-numbering={displayItemNumbering || undefined}>
             {items && items.length ? (

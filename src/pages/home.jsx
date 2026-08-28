@@ -242,7 +242,7 @@ const AchievementCard = ({ title, description, imageUrl }) => {
 
   return (
     <div className="achievement-card">
-      <img src={imageUrl} alt={title} className="achievement-image" />
+      <img src={imageUrl} alt={title} className="achievement-image" loading="lazy" />
       <div className="achievement-content">
         <h3 className="achievement-title">{title}</h3>
         <p className={`achievement-description ${isMobile ? (isExpanded ? 'expanded' : 'truncated') : ''}`}>
@@ -267,7 +267,7 @@ const PartnerCard = ({ name, description, imageUrl, link, customClassName = '' }
     <a href={link} target="_blank" rel="noopener noreferrer" className="partner-card-link">
       <div className={`partner-card ${customClassName}`}>
         <div className="partner-image-container">
-          <img src={imageUrl} alt={`${name} logo`} className="partner-image" />
+          <img src={imageUrl} alt={`${name} logo`} className="partner-image" loading="lazy" />
         </div>
         <div className="partner-content">
           <h3 className="partner-name">{name}</h3>
@@ -425,7 +425,7 @@ export default function VoidPage() {
         </p>
         <div className="alumni-content">
           <div className="alumni-photo-container">
-            <img src={alumni} alt="VOID Alumni Network" className="alumni-group-photo" />
+            <img src={alumni} alt="VOID Alumni Network" className="alumni-group-photo" loading="lazy" />
           </div>
           <div className="alumni-text-container">
             <h3 className="alumni-subheading">Pioneering the Future of Cyber Defense</h3>

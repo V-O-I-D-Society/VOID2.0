@@ -2965,3 +2965,14 @@ img {
   color: #000;
 }
 
+
+/* === Performance === */
+/* Skip rendering below-the-fold sections until they're near the viewport */
+.irc-section,
+.achievements-section,
+.alumni-section,
+.partners-section,
+.mobile-cta-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}

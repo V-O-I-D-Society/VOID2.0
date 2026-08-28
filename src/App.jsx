@@ -1,19 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop.jsx';
-import TerminalPage from './pages/terminal.jsx';
 import VoidPage from './pages/home.jsx';
-import Blogs from './pages/blogs.jsx';
-import Achievements from './pages/achievement.jsx';
-import AboutUs from './pages/about-Us.jsx';
-import Resources from './pages/resources.jsx';
-import ContactUs from './pages/contact-Us.jsx';
-import Register from './pages/register.jsx';
-import IrcPage from './pages/irc.jsx';
-import FAQPage from './pages/FAQ.jsx';
-import BlogPostPage from './pages/BlogPostPage.jsx';
 import LoadingScreen from './components/LoadingScreen.jsx';
 import './App.css';
+
+// Lazy-load non-landing routes so the initial bundle stays small.
+const TerminalPage = lazy(() => import('./pages/terminal.jsx'));
+const Blogs = lazy(() => import('./pages/blogs.jsx'));
+const Achievements = lazy(() => import('./pages/achievement.jsx'));
+const AboutUs = lazy(() => import('./pages/about-Us.jsx'));
+const Resources = lazy(() => import('./pages/resources.jsx'));
+const ContactUs = lazy(() => import('./pages/contact-Us.jsx'));
+const Register = lazy(() => import('./pages/register.jsx'));
+const IrcPage = lazy(() => import('./pages/irc.jsx'));
+const FAQPage = lazy(() => import('./pages/FAQ.jsx'));
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage.jsx'));
 
 const LOADER_KEY = 'void_loader_seen';
 const LOADER_WINDOW_MS = 30 * 60 * 1000; // 30 min
@@ -38,19 +40,21 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <Routes>
-        <Route path="/terminal" element={<TerminalPage />} />
-        <Route path="/" element={<VoidPage />} />
-        <Route path="/blogs" element={<Blogs />} />
-        <Route path="/achievements" element={<Achievements />} />
-        <Route path="/blogs/:id" element={<BlogPostPage />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/resources" element={<Resources />} />
-  <Route path="/contact-us" element={<ContactUs />} />
-  <Route path="/register" element={<Register />} />
-  <Route path="/irc" element={<IrcPage />} />
-  <Route path="/FAQ" element={<FAQPage />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/terminal" element={<TerminalPage />} />
+          <Route path="/" element={<VoidPage />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/achievements" element={<Achievements />} />
+          <Route path="/blogs/:id" element={<BlogPostPage />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/irc" element={<IrcPage />} />
+          <Route path="/FAQ" element={<FAQPage />} />
+        </Routes>
+      </Suspense>
       {showLoader && <LoadingScreen onDone={handleLoaderDone} />}
     </Router>
   );
