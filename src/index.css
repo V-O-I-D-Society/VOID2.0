@@ -469,80 +469,6 @@ img {
   100% { opacity: 1; }
 }
 
-/* Mobile Features Section - Only visible on mobile */
-.mobile-features-section {
-  display: block;
-  padding: 0rem 1rem; /* Reduced padding */
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-  margin: 0; /* Remove top and bottom margins to bring it closer */
-}
-
-@media (min-width: 1024px) {
-  .mobile-features-section {
-    display: none; /* Hide on desktop */
-  }
-}
-
-.mobile-features-container {
-  max-width: 400px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.mobile-features-title {
-  font-family: 'CustomClubFont', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 2rem;
-  background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.mobile-features-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.mobile-feature-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1.5rem 1rem;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.mobile-feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.mobile-feature-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
-.mobile-feature-card h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.5rem;
-}
-
-.mobile-feature-card p {
-  font-size: 0.8rem;
-  color: #a0a0a0;
-  line-height: 1.4;
-}
-
 /* Mobile CTA Section */
 .mobile-cta-section {
   display: block;
@@ -1819,143 +1745,7 @@ img {
   box-shadow: none;
 }
 
-/* Hamburger toggle */
-.navbar_toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  margin-left: auto;
-  z-index: 1100; /* Ensure it's above the menu */
-}
-.navbar_toggle .bar {
-  display: block;
-  width: 24px;
-  height: 3px;
-  background: #e5e7eb; /* neutral-200 */
-  margin: 5px 0;
-  transition: all 0.3s ease-in-out;
-  border-radius: 2px;
-}
-.navbar_toggle.open .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.navbar_toggle.open .bar:nth-child(2) { opacity: 0; }
-.navbar_toggle.open .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-/* Mobile dropdown menu */
-.navbar_mobile_menu {
-  /* Full-screen overlay */
-  position: fixed;
-  top: 0;
-  right: -100%; /* Start off-screen to the right */
-  width: 100%;
-  height: 100%;
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(12px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-  z-index: 999; /* Below the toggle button */
-}
-
-.navbar_mobile_menu.open {
-  right: 0; /* Slide in */
-}
-
-.navbar_mobile_group {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-}
-
-.navbar_mobile_menu .navbar_link {
-  color: #e0e0e0;
-  font-size: 1.75rem; /* Increased font size for mobile links */
-  font-weight: 500;
-  text-decoration: none;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.navbar_mobile_menu .navbar_link:hover {
-  color: #3b82f6;
-}
-/* Overlay for dim background */
-.navbar_overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
-  z-index: 900;
-}
-
-/* Mobile menu */
-.navbar_mobile_menu {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  height: 100vh;
-  width: 70%;
-  max-width: 300px;
-  background: rgba(15, 15, 15, 0.95);
-  backdrop-filter: blur(10px);
-  display: flex;
-  flex-direction: column;
-  padding: 3rem 2rem;
-  gap: 1.5rem;
-  transition: right 0.3s ease-in-out;
-  z-index: 1000;
-  box-shadow: -2px 0 10px rgba(0,0,0,0.6);
-}
-
-/* Active state */
-.navbar_mobile_menu.active {
-  right: 0;
-}
-
-/* Mobile links */
-.navbar_mobile_group {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-.navbar_mobile_group .navbar_link {
-  font-size: 1.1rem;
-  color: #e0e0e0;
-  text-decoration: none;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.4s ease, transform 0.4s ease, color 0.2s;
-}
-.navbar_mobile_group .navbar_link:hover {
-  color: #3b82f6; /* Tailwind blue-500 */
-}
-
-/* Hide on desktop */
-@media (min-width: 1024px) {
-  .navbar_mobile_menu,
-  .navbar_overlay {
-    display: none;
-  }
-}
-
-.navbar_mobile_menu.open .navbar_link {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Staggered animation for links in mobile groups */
-.navbar_mobile_menu.open .navbar_link:nth-child(1) { transition-delay: 0.2s; }
-.navbar_mobile_menu.open .navbar_link:nth-child(2) { transition-delay: 0.25s; }
-.navbar_mobile_menu.open .navbar_link:nth-child(3) { transition-delay: 0.3s; }
-.navbar_mobile_menu.open .navbar_link:nth-child(4) { transition-delay: 0.35s; }
-.navbar_mobile_menu.open .navbar_link:nth-child(5) { transition-delay: 0.4s; }
-.navbar_mobile_menu.open .navbar_link:nth-child(6) { transition-delay: 0.45s; }
+/* Mobile menu — handled by StaggeredMenu (see src/components/StaggeredMenu) */
 
 @media (max-width: 768px) {
   .navbar_about_left, .navbar_about_right { display: none; }
@@ -1974,16 +1764,38 @@ img {
   }
 }
 
+/* Mobile navbar pill — frosted glass-card look */
 @media (max-width: 768px) {
-  .navbar_toggle { 
-    display: block !important;
-    position: relative; /* Keep this for stacking context */
-    z-index: 1100;
+  .navbar_glass {
+    background: rgba(255, 255, 255, 0.2) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
   }
 }
 
+/* Mobile bottom dock (reactbits.dev Dock) — floating glass bar, mobile only */
+.mobile-dock {
+  position: fixed;
+  bottom: env(safe-area-inset-bottom, 0px);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 900;
+  pointer-events: none;
+}
+.mobile-dock > * {
+  pointer-events: auto;
+}
+
 @media (min-width: 769px) {
-  .navbar_mobile_menu { display: none; }
+  .mobile-dock {
+    display: none;
+  }
 }
 
 /* Loading */

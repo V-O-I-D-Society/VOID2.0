@@ -1,86 +1,99 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Home, Menu, Terminal, Info } from "lucide-react";
 import void_logo from "./../assets/Void Society logo.svg";
 import GlassSurface from "./../components/ui/GlassSurface/GlassSurface";
+import StaggeredMenu from "./../components/StaggeredMenu/StaggeredMenu";
+import Dock from "./../components/Dock/Dock";
 import "./../index.css";
 
-export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const MOBILE_ITEMS = [
+  { label: "Home", link: "/", ariaLabel: "Go to Home" },
+  { label: "About", link: "/about-us", ariaLabel: "Go to About" },
+  { label: "Register", link: "/register", ariaLabel: "Go to Register" },
+  { label: "Contact", link: "/contact-us", ariaLabel: "Go to Contact" },
+  { label: "Blogs", link: "/blogs", ariaLabel: "Go to Blogs" },
+  { label: "FAQ", link: "/FAQ", ariaLabel: "Go to FAQ" },
+  { label: "Resources", link: "/resources", ariaLabel: "Go to Resources" },
+  { label: "CLI", link: "/terminal", ariaLabel: "Go to CLI" }
+];
 
-  const closeMenu = () => setIsMenuOpen(false);
+const DOCK_ITEMS = (navigate, openMenu) => [
+  { icon: <Home size={20} />, label: "Home", onClick: () => navigate("/") },
+  { icon: <Menu size={20} />, label: "Menu", onClick: openMenu },
+  { icon: <Terminal size={20} />, label: "CLI", onClick: () => navigate("/terminal") },
+  { icon: <Info size={20} />, label: "About", onClick: () => navigate("/about-us") }
+];
+
+export default function Navbar() {
+  const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="navbar_about">
-      <GlassSurface
-        width="100%"
-        height={60}
-        borderRadius={999}
-        borderWidth={0.05}
-        brightness={55}
-        opacity={0.9}
-        blur={12}
-        backgroundOpacity={0.12}
-        saturation={1.2}
-        className="navbar_glass"
-        style={{ maxWidth: "1100px", margin: "0 auto" }}
-      >
-        <div className="flex w-full items-center justify-between gap-2 px-4">
-          {/* Logo */}
-          <img
-            src={void_logo}
-            alt="Logo"
-            className="navbar_logo"
-            onClick={closeMenu}
-          />
+    <>
+      <nav className="navbar_about">
+        <GlassSurface
+          width="100%"
+          height={60}
+          borderRadius={999}
+          borderWidth={0.05}
+          brightness={55}
+          opacity={0.9}
+          blur={12}
+          backgroundOpacity={0.12}
+          saturation={1.2}
+          className="navbar_glass"
+          style={{ maxWidth: "1100px", margin: "0 auto" }}
+        >
+          <div className="flex w-full items-center justify-between gap-2 px-4">
+            {/* Logo */}
+            <img src={void_logo} alt="Logo" className="navbar_logo" />
 
-          {/* Desktop nav */}
-          <div className="navbar_about_left navbar_desktop_only">
-            <Link to="/" className="navbar_link">Home</Link>
-            <Link to="/about-us" className="navbar_link">About</Link>
-            <Link to="/register" className="navbar_link">Register</Link>
-            <Link to="/contact-us" className="navbar_link">Contact</Link>
-            <Link to="/blogs" className="navbar_link">Blogs</Link>
-            <Link to="/FAQ" className="navbar_link">FAQ</Link>
+            {/* Desktop nav */}
+            <div className="navbar_about_left navbar_desktop_only">
+              <Link to="/" className="navbar_link">Home</Link>
+              <Link to="/about-us" className="navbar_link">About</Link>
+              <Link to="/register" className="navbar_link">Register</Link>
+              <Link to="/contact-us" className="navbar_link">Contact</Link>
+              <Link to="/blogs" className="navbar_link">Blogs</Link>
+              <Link to="/FAQ" className="navbar_link">FAQ</Link>
+            </div>
+
+            <div className="navbar_about_right navbar_desktop_only">
+              <Link to="/resources" className="navbar_link">Resources</Link>
+              <Link to="/terminal" className="navbar_link">CLI</Link>
+            </div>
           </div>
+        </GlassSurface>
 
-          <div className="navbar_about_right navbar_desktop_only">
-            <Link to="/resources" className="navbar_link">Resources</Link>
-            <Link to="/terminal" className="navbar_link">CLI</Link>
-          </div>
+        {/* Mobile menu — StaggeredMenu (reactbits.dev), toggle sits in the glass pill */}
+        <StaggeredMenu
+          className="navbar-staggered"
+          logoUrl={void_logo}
+          position="right"
+          items={MOBILE_ITEMS}
+          displaySocials={false}
+          displayItemNumbering={false}
+          accentColor="#3b82f6"
+          menuButtonColor="#e5e7eb"
+          openMenuButtonColor="#ffffff"
+          colors={["#15151c", "#1b1b24", "#23232e", "#0e0e13"]}
+          isFixed
+          closeOnClickAway
+          open={mobileMenuOpen}
+          onOpenChange={setMobileMenuOpen}
+        />
+      </nav>
 
-          {/* Hamburger button (mobile only) */}
-          <button
-            aria-label="Toggle navigation menu"
-            className={`navbar_toggle ${isMenuOpen ? "open" : ""}`}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <span className="bar"></span>
-            <span className="bar"></span>
-            <span className="bar"></span>
-          </button>
-        </div>
-      </GlassSurface>
-
-      {/* Overlay */}
-      {isMenuOpen && (
-        <div
-          className="navbar_overlay"
-          onClick={closeMenu}
-        ></div>
-      )}
-
-      {/* Mobile menu (slide-in) */}
-      <div className={`navbar_mobile_menu ${isMenuOpen ? "open" : ""}`}>
-        <div className="navbar_mobile_group">
-          <Link to="/" className="navbar_link" onClick={closeMenu}>Home</Link>
-          <Link to="/about-us" className="navbar_link" onClick={closeMenu}>About</Link>
-          <Link to="/register" className="navbar_link" onClick={closeMenu}>Register</Link>
-          <Link to="/contact-us" className="navbar_link" onClick={closeMenu}>Contact</Link>
-          <Link to="/blogs" className="navbar_link" onClick={closeMenu}>Blogs</Link>
-          <Link to="/resources" className="navbar_link" onClick={closeMenu}>Resources</Link>
-          <Link to="/terminal" className="navbar_link" onClick={closeMenu}>CLI</Link>
-        </div>
+      {/* Mobile bottom dock (reactbits.dev Dock) — hidden on desktop */}
+      <div className="mobile-dock">
+        <Dock
+          items={DOCK_ITEMS(navigate, () => setMobileMenuOpen(true))}
+          panelHeight={64}
+          baseItemSize={50}
+          magnification={70}
+        />
       </div>
-    </nav>
+    </>
   );
 }

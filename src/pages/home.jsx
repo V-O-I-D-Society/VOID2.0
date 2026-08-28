@@ -16,6 +16,7 @@ import alumni from "./../assets/HS/Alumni.jpg"
 import rnb from "./../assets/achievements/RednBlue.webp"
 import Secure from "./../assets/achievements/CyberSecure.webp"
 import AccordionGallery from "./../components/ui/AccordionGallery/AccordionGallery";
+import CircularGallery from "./../components/ui/CircularGallery/CircularGallery";
 import HaosShowcase from "./../components/ui/tech-solutions-hero-section";
 import DarkVeil from "./../components/ui/DarkVeil";
 import ParticleText from "./../components/ui/ParticleText";
@@ -37,6 +38,31 @@ const accordionItems = achievementItems.map(({ image, title, description }) => (
   link: "#",
   description
 }));
+
+// Items for the mobile CircularGallery (short labels under each image)
+const circularItems = [
+  { image: rnb, text: 'RED N BLUE' },
+  { image: nullkiet, text: 'Null Ghaziabad' },
+  { image: nullmeetup, text: 'Null Meetup' },
+  { image: breach, text: 'Breachverse' },
+  { image: LinuxBootcamp, text: 'Linux Bootcamp' },
+  { image: Secure, text: 'Ethical Hacking' },
+  { image: school, text: 'Awareness' }
+];
+
+// Media query hook — true when the viewport matches the query
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches);
+
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const handler = (e) => setMatches(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, [query]);
+
+  return matches;
+}
 
 // Dot Spotlight Component
 function DotSpotlight() {
@@ -252,6 +278,8 @@ const PartnerCard = ({ name, description, imageUrl, link, customClassName = '' }
   );
 };
 export default function VoidPage() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   return (
     
     <div className="">
@@ -295,7 +323,6 @@ export default function VoidPage() {
         onAction={() => {
           const target =
             document.querySelector(".irc-section") ||
-            document.querySelector(".mobile-features-section") ||
             document.querySelector(".achievements-section");
           target?.scrollIntoView({ behavior: "smooth", block: "start" });
         }}
@@ -305,35 +332,6 @@ export default function VoidPage() {
 {/* <div className="bg-blue-500 text-green-500 p-4 m-4 rounded-lg shadow-lg">
   This div should have a blue background, white text, padding, margin, rounded corners, and a shadow if Tailwind is working correctly.
 </div> */}
-
-      {/* Mobile Features Section - Hidden on Desktop */}
-      <div className="mobile-features-section">
-        <div className="mobile-features-container">
-          <h2 className="mobile-features-title">Explore Cybersecurity</h2>
-          <div className="mobile-features-grid">
-            <div className="mobile-feature-card">
-              <div className="mobile-feature-icon">🛡️</div>
-              <h3>Ethical Hacking</h3>
-              <p>Learn penetration testing and vulnerability assessment</p>
-            </div>
-            <div className="mobile-feature-card">
-              <div className="mobile-feature-icon">🔐</div>
-              <h3>Security Tools</h3>
-              <p>Master industry-standard cybersecurity tools</p>
-            </div>
-            <div className="mobile-feature-card">
-              <div className="mobile-feature-icon">🌐</div>
-              <h3>Network Security</h3>
-              <p>Understand network protocols and security measures</p>
-            </div>
-            <div className="mobile-feature-card">
-              <div className="mobile-feature-icon">💻</div>
-              <h3>Digital Forensics</h3>
-              <p>Investigate and analyze digital evidence</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Mobile CTA Section */}
       <div className="mobile-cta-section">
@@ -382,26 +380,40 @@ export default function VoidPage() {
         <h2 className="section-title">Our Events</h2>
         <p className="section-subtitle">Recognized for excellence and innovation in cybersecurity solutions.</p>
         <div style={{ position: 'relative' }}>
-          <AccordionGallery
-            items={accordionItems}
-            defaultIndex={2}
-            expandRatio={0.52}
-            trigger="hover"
-            accentColor="#00ffff"
-            overlayColor="#060010"
-            textColor="#ffffff"
-            grayscale
-            showLabels
-            duration={0.6}
-            ease="power3.out"
-            parallax={0.5}
-            tilt={8}
-            stagger={0.06}
-            height={460}
-            gap={10}
-            radius={16}
-            orientation="horizontal"
-          />
+          {isMobile ? (
+            <div style={{ height: '520px', position: 'relative' }}>
+              <CircularGallery
+                items={circularItems}
+                bend={1}
+                textColor="#ffffff"
+                borderRadius={0.05}
+                font="bold 26px Orbitron"
+                scrollSpeed={2}
+                scrollEase={0.05}
+              />
+            </div>
+          ) : (
+            <AccordionGallery
+              items={accordionItems}
+              defaultIndex={2}
+              expandRatio={0.52}
+              trigger="hover"
+              accentColor="#00ffff"
+              overlayColor="#060010"
+              textColor="#ffffff"
+              grayscale
+              showLabels
+              duration={0.6}
+              ease="power3.out"
+              parallax={0.5}
+              tilt={8}
+              stagger={0.06}
+              height={460}
+              gap={10}
+              radius={16}
+              orientation="horizontal"
+            />
+          )}
         </div>
       </section>
 
