@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Home, Menu, Terminal, Info } from "lucide-react";
-import void_logo from "./../assets/Void Society logo.svg";
 import GlassSurface from "./../components/ui/GlassSurface/GlassSurface";
 import StaggeredMenu from "./../components/StaggeredMenu/StaggeredMenu";
 import Dock from "./../components/Dock/Dock";
@@ -47,7 +46,7 @@ export default function Navbar() {
         >
           <div className="flex w-full items-center justify-between gap-2 px-4">
             {/* Logo */}
-            <img src={void_logo} alt="Logo" className="navbar_logo" />
+            <img src="/logo-for-nav.png" alt="Logo" className="navbar_logo" />
 
             {/* Desktop nav */}
             <div className="navbar_about_left navbar_desktop_only">
@@ -69,7 +68,7 @@ export default function Navbar() {
         {/* Mobile menu — StaggeredMenu (reactbits.dev), toggle sits in the glass pill */}
         <StaggeredMenu
           className="navbar-staggered"
-          logoUrl={void_logo}
+          logoUrl="/logo-for-nav.png"
           position="right"
           items={MOBILE_ITEMS}
           displaySocials={false}

@@ -376,40 +376,24 @@
   width: 100vw;
 }
 
-/* Position the toggle inside the glass pill (top-right). */
+/* The header (logo top-left + close cross top-right) only matters while the
+   menu is open — the top navbar is hidden on mobile. */
 .navbar-staggered .staggered-menu-header {
-  top: calc(10px + env(safe-area-inset-top));
-  left: auto;
-  right: 0.25rem;
-  width: auto;
-  padding: 0;
-  height: 60px;
-  align-items: center;
-  justify-content: flex-end;
-  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+.navbar-staggered[data-open] .staggered-menu-header {
+  opacity: 1;
+  visibility: visible;
 }
 
 .navbar-staggered .sm-toggle {
   pointer-events: auto;
-  margin-right: 0.75rem;
   color: #e5e7eb;
   font-family: inherit;
   font-size: 0.95rem;
   letter-spacing: 0.02em;
-}
-
-/* Hide the "Menu +" toggle in the initial (closed) state — the dock's
-   "Menu" button opens it. Only the close cross shows once the menu opens. */
-.navbar-staggered .sm-toggle {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
-}
-.navbar-staggered[data-open] .sm-toggle {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
 }
 
 .navbar-staggered .sm-toggle-textWrap {
@@ -417,9 +401,9 @@
   min-width: 44px;
 }
 
-/* Hide the component's own logo — the navbar already renders it. */
-.navbar-staggered .sm-logo {
-  display: none;
+.navbar-staggered .sm-logo-img {
+  height: 40px;
+  width: auto;
 }
 
 /* Full-width panel on mobile with dark glass theme. */

@@ -1731,6 +1731,14 @@ img {
   max-width: 1100px;
   margin: 0 auto;
 }
+
+/* Hide the top navbar on mobile — the logo moves into the menu bar,
+   and the bottom dock is the primary navigation. */
+@media (max-width: 768px) {
+  .navbar_about .navbar_glass {
+    display: none;
+  }
+}
 .navbar_glass .navbar_about_left,
 .navbar_glass .navbar_about_right {
   background: transparent;
@@ -1796,6 +1804,15 @@ img {
   .mobile-dock {
     display: none;
   }
+}
+
+/* GlassSurface fluid-glass background inside the dock bar */
+.dock-glass-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 /* Loading */

@@ -6,6 +6,7 @@ import {
   AnimatePresence
 } from 'motion/react';
 import React, { Children, cloneElement, useEffect, useMemo, useRef, useState } from 'react';
+import GlassSurface from '../ui/GlassSurface/GlassSurface';
 
 function DockItem({
   children,
@@ -126,27 +127,42 @@ export default function Dock({
           isHovered.set(0);
           mouseX.set(Infinity);
         }}
-        className={`${className} absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-end w-fit gap-4 rounded-2xl border border-white/20 bg-white/10 pb-2 px-4 shadow-lg shadow-black/30 backdrop-blur-xl`}
+        className={`${className} absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-end w-fit gap-4 rounded-2xl border border-white/20 pb-2 px-4 shadow-lg shadow-black/30`}
         style={{ height: panelHeight }}
         role="toolbar"
         aria-label="Application dock"
       >
-        {items.map((item, index) => (
-          <DockItem
-            key={index}
-            onClick={item.onClick}
-            className={item.className}
-            mouseX={mouseX}
-            spring={spring}
-            distance={distance}
-            magnification={magnification}
-            baseItemSize={baseItemSize}
-            label={item.label}
-          >
-            <DockIcon>{item.icon}</DockIcon>
-            <DockLabel>{item.label}</DockLabel>
-          </DockItem>
-        ))}
+        {/* Fluid-glass background (same GlassSurface effect as the navbar/menu) */}
+        <GlassSurface
+          className="dock-glass-bg"
+          width="100%"
+          height="100%"
+          borderRadius={16}
+          borderWidth={0.05}
+          brightness={55}
+          opacity={0.9}
+          blur={12}
+          backgroundOpacity={0.12}
+          saturation={1.2}
+        />
+        <div className="relative z-10 flex items-end gap-4">
+          {items.map((item, index) => (
+            <DockItem
+              key={index}
+              onClick={item.onClick}
+              className={item.className}
+              mouseX={mouseX}
+              spring={spring}
+              distance={distance}
+              magnification={magnification}
+              baseItemSize={baseItemSize}
+              label={item.label}
+            >
+              <DockIcon>{item.icon}</DockIcon>
+              <DockLabel>{item.label}</DockLabel>
+            </DockItem>
+          ))}
+        </div>
       </motion.div>
     </motion.div>
   );
