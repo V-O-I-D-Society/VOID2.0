@@ -5,7 +5,7 @@
 # Proxy API calls to Railway (must stay BEFORE the SPA catch-all)
 [[redirects]]
   from = "/api/*"
-  to = "https://YOUR-RAILWAY-DOMAIN.up.railway.app/api/:splat"
+  to = "https://void20-production.up.railway.app/api/:splat"
   status = 200
   force = true
 

@@ -4,6 +4,13 @@ import helmet from 'helmet';
 import multer from 'multer';
 import { config } from './config.js';
 import { router } from './routes.js';
+import { query } from './db.js';
+
+// Heartbeat: keeps the Neon compute awake so the first request after idle
+// doesn't pay a 4-10s cold-start (free-tier Neon suspends after ~5 min idle).
+setInterval(() => {
+  query('SELECT 1').catch(() => {});
+}, 2 * 60 * 1000);
 
 const app = express();
 app.disable('x-powered-by');
