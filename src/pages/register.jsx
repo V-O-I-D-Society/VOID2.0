@@ -329,7 +329,7 @@ export default function Register() {
                         </div>
 
                         <div className="reg-field">
-                          <label className="reg-label" htmlFor="joinGroup">Do you want to join our WhatsApp group?</label>
+                          <label className="reg-label" htmlFor="joinGroup">Did you join our WhatsApp group?</label>
                           <select
                             className="reg-select"
                             id="joinGroup"
