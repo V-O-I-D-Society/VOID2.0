@@ -2663,6 +2663,36 @@ img {
   transform: translate(-2px, -2px);
 }
 
+.reg-whatsapp-btn {
+  display: block;
+  text-align: center;
+  background: #25d366;
+  color: #000;
+  border: 2px solid #fff;
+  border-radius: 0;
+  padding: 0.9rem 1rem;
+  font-family: 'Fira Code', 'Monaco', 'Consolas', 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 6px 6px 0 #000;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.reg-whatsapp-btn:hover {
+  background: #4ce07f;
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 #000;
+}
+
+.reg-whatsapp-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #000;
+}
+
 .reg-file-input {
   position: absolute;
   width: 1px;

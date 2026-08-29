@@ -7,6 +7,10 @@ import DecryptedText from "../components/ui/DecryptedText";
 
 const ACCOMMODATIONS = ["Hosteller", "Outside"];
 
+const JOIN_GROUP_OPTIONS = ["Yes", "No"];
+
+const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/YOUR_GROUP_LINK"; // TODO: replace with actual group invite link
+
 const BRANCHES = [
   { code: "CSE", label: "CSE — Computer Science & Engineering" },
   { code: "CS", label: "CS — Computer Science" },
@@ -39,6 +43,7 @@ const initialState = {
   email: "",
   whatsapp: "",
   accommodation: "",
+  joinGroup: "",
   screenshot: null,
 };
 
@@ -322,6 +327,32 @@ export default function Register() {
                           </select>
                           {errors.accommodation && <span className="reg-error">{errors.accommodation}</span>}
                         </div>
+
+                        <div className="reg-field">
+                          <label className="reg-label" htmlFor="joinGroup">Do you want to join our WhatsApp group?</label>
+                          <select
+                            className="reg-select"
+                            id="joinGroup"
+                            name="joinGroup"
+                            value={form.joinGroup}
+                            onChange={handleChange}
+                          >
+                            <option value="">Select</option>
+                            {JOIN_GROUP_OPTIONS.map((opt) => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          {errors.joinGroup && <span className="reg-error">{errors.joinGroup}</span>}
+                        </div>
+
+                        <a
+                          className="reg-whatsapp-btn"
+                          href={WHATSAPP_GROUP_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Join WhatsApp Group
+                        </a>
                       </div>
 
                       <button type="button" className="register-submit" onClick={nextStep}>

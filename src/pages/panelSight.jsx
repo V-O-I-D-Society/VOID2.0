@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import "./panelSight.css";
 
 const TOKEN_KEY = "void_admin_token";
 
 export default function PanelSight() {
-  const navigate = useNavigate();
-  const [status, setStatus] = useState("checking"); // checking | ready
+  const [status, setStatus] = useState("checking"); // checking | login | ready
   const [registrations, setRegistrations] = useState([]);
   const [lightbox, setLightbox] = useState(null);
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+  const [loggingIn, setLoggingIn] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem(TOKEN_KEY);
     if (!token) {
-      navigate("/", { replace: true });
+      setStatus("login");
       return;
     }
     (async () => {
@@ -33,18 +34,85 @@ export default function PanelSight() {
         setStatus("ready");
       } catch {
         sessionStorage.removeItem(TOKEN_KEY);
-        navigate("/", { replace: true });
+        setStatus("login");
       }
     })();
-  }, [navigate]);
+  }, []);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoggingIn(true);
+    setAuthError("");
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (res.status === 429) {
+        setAuthError("Too many attempts. Try again later.");
+        return;
+      }
+      if (!res.ok) {
+        setAuthError("Access denied.");
+        return;
+      }
+      const body = await res.json();
+      sessionStorage.setItem(TOKEN_KEY, body.token);
+
+      const list = await fetch("/api/registrations", {
+        headers: { Authorization: `Bearer ${body.token}` },
+      });
+      if (!list.ok) throw new Error("unauthorized");
+
+      setRegistrations(await list.json());
+      setPassword("");
+      setStatus("ready");
+    } catch {
+      setAuthError("Network error. Please try again.");
+    } finally {
+      setLoggingIn(false);
+    }
+  };
 
   const handleLogout = () => {
     sessionStorage.removeItem(TOKEN_KEY);
-    navigate("/", { replace: true });
+    setRegistrations([]);
+    setPassword("");
+    setAuthError("");
+    setStatus("login");
   };
 
-  if (status !== "ready") {
+  if (status === "checking") {
     return <div className="panel-sight panel-sight-loading" />;
+  }
+
+  if (status === "login") {
+    return (
+      <div className="panel-sight">
+        <Navbar />
+        <div className="panel-sight-login-wrap">
+          <div className="panel-sight-login">
+            <p className="panel-sight-login-kicker">// RESTRICTED ACCESS</p>
+            <h1 className="panel-sight-title">VOID · PANEL SIGHT</h1>
+            <form onSubmit={handleLogin}>
+              <input
+                className="panel-sight-login-input"
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoFocus
+              />
+              {authError && <p className="panel-sight-login-error">{authError}</p>}
+              <button type="submit" className="panel-sight-login-submit" disabled={loggingIn}>
+                {loggingIn ? "Verifying…" : "Access Panel"}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
