@@ -7,6 +7,7 @@ function TerminalComponent() {
   const [history, setHistory] = useState([]);
   const [input, setInput] = useState("");
   const [historyIndex, setHistoryIndex] = useState(null);
+  const [authPhase, setAuthPhase] = useState(null); // null | "prompt"
   const [currentPath, setCurrentPath] = useState("/home/guest");
   const [user, setUser] = useState({ username: "guest" });
   const [isMatrixMode, setIsMatrixMode] = useState(false);
@@ -398,8 +399,12 @@ function TerminalComponent() {
         break;
 
       case "exit":
-        authService.logout();
         window.location.href = '/';
+        return;
+
+      case "voidb":
+        setAuthPhase("prompt");
+        setHistory((prev) => [...prev, { command, output: "" }]);
         return;
 
       default:
@@ -409,8 +414,40 @@ function TerminalComponent() {
     setHistory([...history, { command, output }]);
   };
 
+  const handlePasswordSubmit = async (password) => {
+    setInput("");
+    setHistoryIndex(null);
+    setAuthPhase(null);
+
+    let resultLine = "Access denied.";
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (res.status === 429) {
+        resultLine = "Too many attempts. Try again later.";
+      } else if (res.ok) {
+        const body = await res.json();
+        sessionStorage.setItem("void_admin_token", body.token);
+        resultLine = "Access granted.";
+        setHistory((prev) => [...prev, { command: "", output: resultLine }]);
+        setTimeout(() => { window.location.href = "/panel-sight"; }, 600);
+        return;
+      }
+    } catch {
+      resultLine = "Network error.";
+    }
+    setHistory((prev) => [...prev, { command: "", output: resultLine }]);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (authPhase === "prompt") {
+      handlePasswordSubmit(input);
+      return;
+    }
     if (!input.trim()) return;
     handleCommand(input);
     setInput("");
@@ -418,6 +455,7 @@ function TerminalComponent() {
   };
 
   const handleKeyDown = (e) => {
+    if (authPhase === "prompt") return;
     if (e.key === "ArrowUp") {
       e.preventDefault();
       if (historyIndex === null) {
@@ -496,9 +534,9 @@ function TerminalComponent() {
         </div>
 
         <form onSubmit={handleSubmit} className="terminal-input-form">
-          <span className="prompt">{getPrompt()}</span>
+          <span className="prompt">{authPhase === "prompt" ? "Password:" : getPrompt()}</span>
           <input
-            type="text"
+            type={authPhase === "prompt" ? "password" : "text"}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}

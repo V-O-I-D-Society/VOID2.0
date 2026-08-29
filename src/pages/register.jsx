@@ -1,19 +1,30 @@
-import React, { useEffect, useRef, useState } from "react";
-import QRCode from "qrcode";
+import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import DarkVeil from "../components/ui/DarkVeil";
 import Shuffle from "../components/ui/Shuffle";
 import DecryptedText from "../components/ui/DecryptedText";
 
-// TODO(backend): replace with the real payment link / UPI ID once the
-// payment flow is designed. This is a placeholder for the scannable QR.
-const PAYMENT_LINK = "upi://pay?pa=voidsociety@ybl&pn=VOID%20Society&cu=INR";
+const ACCOMMODATIONS = ["Hosteller", "Outside"];
 
-const ACCOMMODATIONS = ["Hostel", "Outside", "Not Required"];
-const PAYMENT_STATUSES = ["Paid", "Pending", "Not Paid"];
-const VERIFICATION_STATUSES = ["Pending Verification", "Verified", "Rejected"];
-const GROUP_STATUSES = ["Not Added", "Invited", "Added"];
+const BRANCHES = [
+  { code: "CSE", label: "CSE — Computer Science & Engineering" },
+  { code: "CS", label: "CS — Computer Science" },
+  { code: "CSE (AI)", label: "CSE (AI) — Computer Science & Engineering (Artificial Intelligence)" },
+  { code: "CSE (AI & ML)", label: "CSE (AI & ML) — Computer Science & Engineering (Artificial Intelligence & Machine Learning)" },
+  { code: "IT", label: "IT — Information Technology" },
+  { code: "CSIT", label: "CSIT — Computer Science & Information Technology" },
+  { code: "CSE (DS)", label: "CSE (DS) — Computer Science & Engineering (Data Science)" },
+  { code: "CSE (CS)", label: "CSE (CS) — Computer Science & Engineering (Cyber Security)" },
+  { code: "ECE", label: "ECE — Electronics & Communication Engineering" },
+  { code: "EEE", label: "EEE — Electrical & Electronics Engineering" },
+  { code: "EC", label: "EC — Electrical & Computer Engineering" },
+  { code: "ECE (VLSI)", label: "ECE (VLSI) — Electronics & Communication Engineering (VLSI Design & Technology)" },
+  { code: "ME", label: "ME — Mechanical Engineering" },
+  { code: "AMIA", label: "AMIA — Advanced Mechatronics & Industrial Automation" },
+  { code: "MBA", label: "MBA — Master of Business Administration" },
+  { code: "MCA", label: "MCA — Master of Computer Applications" },
+];
 
 const CheckmarkIcon = () => (
   <svg className="register-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
@@ -28,10 +39,7 @@ const initialState = {
   email: "",
   whatsapp: "",
   accommodation: "",
-  paymentStatus: "",
   screenshot: null,
-  verificationStatus: "",
-  groupStatus: "",
 };
 
 export default function Register() {
@@ -39,20 +47,9 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [copied, setCopied] = useState(false);
   const [step, setStep] = useState(1);
-
-  const qrCanvasRef = useRef(null);
-
-  // Render the scannable QR (payment link placeholder).
-  useEffect(() => {
-    if (!qrCanvasRef.current) return;
-    QRCode.toCanvas(qrCanvasRef.current, PAYMENT_LINK, {
-      width: 260,
-      margin: 2,
-      color: { dark: "#050505", light: "#ffffff" },
-    });
-  }, []);
+  const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -77,21 +74,26 @@ export default function Register() {
     setErrors((prev) => ({ ...prev, screenshot: undefined }));
   };
 
+  const validateEmail = (value) => {
+    const email = value.trim();
+    if (!email) return "KIET email is required.";
+    if (!/^[\w.+-]+@[\w-]+(\.[\w-]+)+$/.test(email)) return "Enter a valid email address.";
+    if (!/@kiet\.edu$/i.test(email)) return "Only @kiet.edu email addresses are allowed.";
+    return undefined;
+  };
+
   const validate = () => {
     const errs = {};
     if (!form.name.trim()) errs.name = "Name is required.";
-    if (!form.email.trim()) {
-      errs.email = "KIET email is required.";
-    } else if (!/^[\w.+-]+@[\w-]+(\.[\w-]+)+$/.test(form.email.trim())) {
-      errs.email = "Enter a valid email address.";
-    }
+    const emailErr = validateEmail(form.email);
+    if (emailErr) errs.email = emailErr;
     if (!form.whatsapp.trim()) {
       errs.whatsapp = "WhatsApp number is required.";
     } else if (!/^\+?[\d\s-]{10,15}$/.test(form.whatsapp.trim())) {
       errs.whatsapp = "Enter a valid WhatsApp number.";
     }
     if (!form.accommodation) errs.accommodation = "Select your mode of accommodation.";
-    if (!form.paymentStatus) errs.paymentStatus = "Select your payment status.";
+    if (!form.screenshot) errs.screenshot = "Upload your payment screenshot.";
     return errs;
   };
 
@@ -100,19 +102,14 @@ export default function Register() {
     const errs = {};
     if (target === 1) {
       if (!form.name.trim()) errs.name = "Name is required.";
-      if (!form.email.trim()) {
-        errs.email = "KIET email is required.";
-      } else if (!/^[\w.+-]+@[\w-]+(\.[\w-]+)+$/.test(form.email.trim())) {
-        errs.email = "Enter a valid email address.";
-      }
+      const emailErr = validateEmail(form.email);
+      if (emailErr) errs.email = emailErr;
       if (!form.whatsapp.trim()) {
         errs.whatsapp = "WhatsApp number is required.";
       } else if (!/^\+?[\d\s-]{10,15}$/.test(form.whatsapp.trim())) {
         errs.whatsapp = "Enter a valid WhatsApp number.";
       }
       if (!form.accommodation) errs.accommodation = "Select your mode of accommodation.";
-    } else if (target === 3) {
-      if (!form.paymentStatus) errs.paymentStatus = "Select your payment status.";
     }
     return errs;
   };
@@ -132,19 +129,49 @@ export default function Register() {
     setStep((s) => Math.max(s - 1, 1));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       return;
     }
-    // Frontend only for now — the backend phase will wire this to an API.
-    console.log("REGISTRATION_PAYLOAD", {
-      ...form,
-      screenshot: form.screenshot ? form.screenshot.name : null,
-    });
-    setSubmitted(true);
+
+    setSubmitting(true);
+    setServerError("");
+
+    const data = new FormData();
+    data.append("name", form.name.trim());
+    data.append("branch", form.branch);
+    data.append("email", form.email.trim());
+    data.append("whatsapp", form.whatsapp.trim());
+    data.append("accommodation", form.accommodation);
+    if (form.screenshot) data.append("screenshot", form.screenshot);
+
+    try {
+      const res = await fetch("/api/register", { method: "POST", body: data });
+
+      if (res.status === 409) {
+        const body = await res.json().catch(() => ({}));
+        setErrors((prev) => ({ ...prev, email: body.errors?.email || "This email is already registered." }));
+        return;
+      }
+      if (res.status === 422) {
+        const body = await res.json().catch(() => ({}));
+        setErrors(body.errors || {});
+        return;
+      }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        setServerError(body.error || "Something went wrong. Please try again.");
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setServerError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -156,14 +183,8 @@ export default function Register() {
       if (prevUrl) URL.revokeObjectURL(prevUrl);
       return null;
     });
-    setCopied(false);
-  };
-
-  const copyLink = () => {
-    navigator.clipboard
-      .writeText(PAYMENT_LINK)
-      .then(() => setCopied(true))
-      .catch(() => setCopied(false));
+    setServerError("");
+    setSubmitting(false);
   };
 
   return (
@@ -243,15 +264,18 @@ export default function Register() {
 
                         <div className="reg-field">
                           <label className="reg-label" htmlFor="branch">Branch</label>
-                          <input
-                            className="reg-input"
+                          <select
+                            className="reg-select"
                             id="branch"
                             name="branch"
-                            type="text"
-                            placeholder="e.g. CSE (AI & ML)"
                             value={form.branch}
                             onChange={handleChange}
-                          />
+                          >
+                            <option value="">Select Branch</option>
+                            {BRANCHES.map((b) => (
+                              <option key={b.code} value={b.code}>{b.label}</option>
+                            ))}
+                          </select>
                         </div>
 
                         <div className="reg-field">
@@ -317,7 +341,7 @@ export default function Register() {
                       </div>
 
                       <div className="qr-frame">
-                        <canvas ref={qrCanvasRef} className="qr-canvas" />
+                        <img className="qr-canvas" src="/assets/qr.png" alt="UPI payment QR code" />
                         <span className="qr-scanline" />
                         <span className="qr-corner qr-corner-tl" />
                         <span className="qr-corner qr-corner-tr" />
@@ -331,13 +355,6 @@ export default function Register() {
                       <p className="qr-panel-desc">
                         Complete your payment via any UPI app, then upload the screenshot in the form.
                       </p>
-
-                      <div className="qr-link-row">
-                        <span className="qr-link-text">{PAYMENT_LINK}</span>
-                        <button type="button" className="qr-copy" onClick={copyLink}>
-                          {copied ? "COPIED" : "COPY"}
-                        </button>
-                      </div>
 
                       <div className="reg-nav">
                         <button type="button" className="reg-back" onClick={prevStep}>← Back</button>
@@ -360,23 +377,6 @@ export default function Register() {
                         </div>
 
                         <div className="reg-field">
-                          <label className="reg-label" htmlFor="paymentStatus">Payment Status</label>
-                          <select
-                            className="reg-select"
-                            id="paymentStatus"
-                            name="paymentStatus"
-                            value={form.paymentStatus}
-                            onChange={handleChange}
-                          >
-                            <option value="">Select payment status</option>
-                            {PAYMENT_STATUSES.map((opt) => (
-                              <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                          {errors.paymentStatus && <span className="reg-error">{errors.paymentStatus}</span>}
-                        </div>
-
-                        <div className="reg-field">
                           <label className="reg-label" htmlFor="screenshot">Payment Screenshot</label>
                           <div className="reg-file-wrap">
                             <label className="reg-file" htmlFor="screenshot">
@@ -396,51 +396,17 @@ export default function Register() {
                               <img src={preview} alt="Payment screenshot preview" />
                             </div>
                           )}
+                          {errors.screenshot && <span className="reg-error">{errors.screenshot}</span>}
                         </div>
 
-                        <div className="reg-field">
-                          <label className="reg-label" htmlFor="verificationStatus">Payment Verification Status</label>
-                          <select
-                            className="reg-select"
-                            id="verificationStatus"
-                            name="verificationStatus"
-                            value={form.verificationStatus}
-                            onChange={handleChange}
-                          >
-                            <option value="">Select verification status</option>
-                            {VERIFICATION_STATUSES.map((opt) => (
-                              <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                        </div>
                       </div>
 
-                      <div className="reg-section">
-                        <div className="reg-section-header">
-                          <span className="reg-section-index">03</span>
-                          <h3 className="reg-section-title">Group / Participation</h3>
-                        </div>
-
-                        <div className="reg-field">
-                          <label className="reg-label" htmlFor="groupStatus">WhatsApp Group Status</label>
-                          <select
-                            className="reg-select"
-                            id="groupStatus"
-                            name="groupStatus"
-                            value={form.groupStatus}
-                            onChange={handleChange}
-                          >
-                            <option value="">Select group status</option>
-                            {GROUP_STATUSES.map((opt) => (
-                              <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-
+                      {serverError && <span className="reg-error">{serverError}</span>}
                       <div className="reg-nav">
                         <button type="button" className="reg-back" onClick={prevStep}>← Back</button>
-                        <button type="submit" className="register-submit reg-nav-next">Register Now</button>
+                        <button type="submit" className="register-submit reg-nav-next" disabled={submitting}>
+                          {submitting ? "Submitting…" : "Register Now"}
+                        </button>
                       </div>
                     </form>
                   </div>

@@ -1,0 +1,141 @@
+.panel-sight {
+  min-height: 100vh;
+  background: #050505;
+  color: #e5e5e5;
+  font-family: 'Fira Code', 'Monaco', 'Consolas', 'Courier New', monospace;
+  padding-top: 5rem; /* clear the fixed site navbar */
+  padding-bottom: 4rem;
+}
+
+.panel-sight-loading {
+  min-height: 100vh;
+}
+
+.panel-sight-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  flex-wrap: wrap;
+}
+
+.panel-sight-title {
+  margin: 0;
+  font-size: 1.15rem;
+  letter-spacing: 0.2em;
+  color: #fff;
+}
+
+.panel-sight-sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.panel-sight-logout {
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.panel-sight-logout:hover {
+  background: #3b82f6;
+  color: #000;
+}
+
+.panel-sight-error {
+  color: #f87171;
+  padding: 0.75rem 2rem;
+  font-size: 0.85rem;
+}
+
+.panel-sight-table-wrap {
+  padding: 2rem;
+  overflow-x: auto;
+}
+
+.panel-sight-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.85rem;
+}
+
+.panel-sight-table th,
+.panel-sight-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  vertical-align: middle;
+}
+
+.panel-sight-table th {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.panel-sight-table tr:hover {
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.panel-sight-thumb {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: block;
+}
+
+.panel-sight-thumb img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: block;
+}
+
+.panel-sight-empty {
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.9rem;
+}
+
+.panel-sight-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.panel-sight-lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 720px) {
+  .panel-sight-header {
+    padding: 1rem;
+  }
+  .panel-sight-table-wrap {
+    padding: 1rem;
+  }
+}

@@ -16,6 +16,7 @@ const Register = lazy(() => import('./pages/register.jsx'));
 const IrcPage = lazy(() => import('./pages/irc.jsx'));
 const FAQPage = lazy(() => import('./pages/FAQ.jsx'));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage.jsx'));
+const PanelSight = lazy(() => import('./pages/panelSight.jsx'));
 
 const LOADER_KEY = 'void_loader_seen';
 const LOADER_WINDOW_MS = 30 * 60 * 1000; // 30 min
@@ -53,6 +54,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/irc" element={<IrcPage />} />
           <Route path="/FAQ" element={<FAQPage />} />
+          <Route path="/panel-sight" element={<PanelSight />} />
         </Routes>
       </Suspense>
       {showLoader && <LoadingScreen onDone={handleLoaderDone} />}

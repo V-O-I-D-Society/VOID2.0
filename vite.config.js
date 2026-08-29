@@ -12,10 +12,16 @@ export default defineConfig({
   },
   server: {
     host: true, // listen on all interfaces
-    port: 5173, 
+    port: 5173,
     // allow Cloudflare Tunnel host
     allowedHosts: [
       'permit-veteran-mysimon-played.trycloudflare.com '
     ],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+    },
   },
 });
