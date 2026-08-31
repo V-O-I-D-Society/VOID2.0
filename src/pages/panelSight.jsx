@@ -7,7 +7,6 @@ const TOKEN_KEY = "void_admin_token";
 export default function PanelSight() {
   const [status, setStatus] = useState("checking"); // checking | login | ready
   const [registrations, setRegistrations] = useState([]);
-  const [lightbox, setLightbox] = useState(null);
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
@@ -139,7 +138,6 @@ export default function PanelSight() {
               <th>WhatsApp</th>
               <th>Accommodation</th>
               <th>Date</th>
-              <th>Screenshot</th>
             </tr>
           </thead>
           <tbody>
@@ -152,15 +150,6 @@ export default function PanelSight() {
                 <td>{r.whatsapp}</td>
                 <td>{r.accommodation}</td>
                 <td>{new Date(r.created_at).toLocaleString()}</td>
-                <td>
-                  <button
-                    type="button"
-                    className="panel-sight-thumb"
-                    onClick={() => setLightbox(r.screenshot)}
-                  >
-                    <img src={r.screenshot} alt={`Payment proof for ${r.name}`} />
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
@@ -169,12 +158,6 @@ export default function PanelSight() {
           <p className="panel-sight-empty">No registrations yet.</p>
         )}
       </div>
-
-      {lightbox && (
-        <div className="panel-sight-lightbox" onClick={() => setLightbox(null)}>
-          <img src={lightbox} alt="Payment proof" />
-        </div>
-      )}
     </div>
   );
 }

@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS registrations (
   email         TEXT NOT NULL UNIQUE,
   whatsapp      TEXT NOT NULL,
   accommodation TEXT NOT NULL,
-  screenshot    TEXT NOT NULL,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_registrations_email ON registrations (email);

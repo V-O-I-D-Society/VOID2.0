@@ -44,15 +44,12 @@ const initialState = {
   whatsapp: "",
   accommodation: "",
   joinGroup: "",
-  screenshot: null,
 };
 
 export default function Register() {
   const [form, setForm] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const [preview, setPreview] = useState(null);
-  const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState("");
 
@@ -60,23 +57,6 @@ export default function Register() {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: undefined }));
-  };
-
-  const handleFile = (e) => {
-    const file = e.target.files && e.target.files[0];
-    setForm((prev) => ({ ...prev, screenshot: file || null }));
-    if (file) {
-      setPreview((prevUrl) => {
-        if (prevUrl) URL.revokeObjectURL(prevUrl);
-        return URL.createObjectURL(file);
-      });
-    } else {
-      setPreview((prevUrl) => {
-        if (prevUrl) URL.revokeObjectURL(prevUrl);
-        return null;
-      });
-    }
-    setErrors((prev) => ({ ...prev, screenshot: undefined }));
   };
 
   const validateEmail = (value) => {
@@ -98,40 +78,7 @@ export default function Register() {
       errs.whatsapp = "Enter a valid WhatsApp number.";
     }
     if (!form.accommodation) errs.accommodation = "Select your mode of accommodation.";
-    if (!form.screenshot) errs.screenshot = "Upload your payment screenshot.";
     return errs;
-  };
-
-  // Validate only the fields belonging to the step being left.
-  const validateStep = (target) => {
-    const errs = {};
-    if (target === 1) {
-      if (!form.name.trim()) errs.name = "Name is required.";
-      const emailErr = validateEmail(form.email);
-      if (emailErr) errs.email = emailErr;
-      if (!form.whatsapp.trim()) {
-        errs.whatsapp = "WhatsApp number is required.";
-      } else if (!/^\+?[\d\s-]{10,15}$/.test(form.whatsapp.trim())) {
-        errs.whatsapp = "Enter a valid WhatsApp number.";
-      }
-      if (!form.accommodation) errs.accommodation = "Select your mode of accommodation.";
-    }
-    return errs;
-  };
-
-  const nextStep = () => {
-    const errs = validateStep(step);
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
-    }
-    setErrors({});
-    setStep((s) => Math.min(s + 1, 3));
-  };
-
-  const prevStep = () => {
-    setErrors({});
-    setStep((s) => Math.max(s - 1, 1));
   };
 
   const handleSubmit = async (e) => {
@@ -145,16 +92,18 @@ export default function Register() {
     setSubmitting(true);
     setServerError("");
 
-    const data = new FormData();
-    data.append("name", form.name.trim());
-    data.append("branch", form.branch);
-    data.append("email", form.email.trim());
-    data.append("whatsapp", form.whatsapp.trim());
-    data.append("accommodation", form.accommodation);
-    if (form.screenshot) data.append("screenshot", form.screenshot);
-
     try {
-      const res = await fetch("/api/register", { method: "POST", body: data });
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          branch: form.branch,
+          email: form.email.trim(),
+          whatsapp: form.whatsapp.trim(),
+          accommodation: form.accommodation,
+        }),
+      });
 
       if (res.status === 409) {
         const body = await res.json().catch(() => ({}));
@@ -183,11 +132,6 @@ export default function Register() {
     setForm(initialState);
     setErrors({});
     setSubmitted(false);
-    setStep(1);
-    setPreview((prevUrl) => {
-      if (prevUrl) URL.revokeObjectURL(prevUrl);
-      return null;
-    });
     setServerError("");
     setSubmitting(false);
   };
@@ -233,8 +177,7 @@ export default function Register() {
                   <CheckmarkIcon />
                   <h2>Registration Submitted</h2>
                   <p>
-                    Welcome to the void. Our team will verify your payment and add you to the
-                    group shortly.
+                    Welcome to the void. Our team will add you to the group shortly.
                   </p>
                   <button type="button" className="register-submit" onClick={handleReset}>
                     Register Another
@@ -243,205 +186,122 @@ export default function Register() {
               </div>
             ) : (
               <>
-                {/* Step 1 — Personal info */}
-                {step === 1 && (
-                  <div className="register-form-card reg-step">
-                    <form onSubmit={(e) => e.preventDefault()} noValidate>
-                      <div className="reg-section">
-                        <div className="reg-section-header">
-                          <span className="reg-section-index">01</span>
-                          <h3 className="reg-section-title">Personal Information</h3>
-                        </div>
+                <div className="register-form-card reg-step">
+                  <form onSubmit={handleSubmit} noValidate>
+                    <div className="reg-section">
+                      <div className="reg-section-header">
+                        <span className="reg-section-index">01</span>
+                        <h3 className="reg-section-title">Personal Information</h3>
+                      </div>
 
-                        <div className="reg-field">
-                          <label className="reg-label" htmlFor="name">Name</label>
-                          <input
-                            className="reg-input"
-                            id="name"
-                            name="name"
-                            type="text"
-                            placeholder="Your full name"
-                            value={form.name}
-                            onChange={handleChange}
-                          />
-                          {errors.name && <span className="reg-error">{errors.name}</span>}
-                        </div>
+                      <div className="reg-field">
+                        <label className="reg-label" htmlFor="name">Name</label>
+                        <input
+                          className="reg-input"
+                          id="name"
+                          name="name"
+                          type="text"
+                          placeholder="Your full name"
+                          value={form.name}
+                          onChange={handleChange}
+                        />
+                        {errors.name && <span className="reg-error">{errors.name}</span>}
+                      </div>
 
-                        <div className="reg-field">
-                          <label className="reg-label" htmlFor="branch">Branch</label>
-                          <select
-                            className="reg-select"
-                            id="branch"
-                            name="branch"
-                            value={form.branch}
-                            onChange={handleChange}
-                          >
-                            <option value="">Select Branch</option>
-                            {BRANCHES.map((b) => (
-                              <option key={b.code} value={b.code}>{b.label}</option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div className="reg-field">
-                          <label className="reg-label" htmlFor="email">KIET Email ID</label>
-                          <input
-                            className="reg-input"
-                            id="email"
-                            name="email"
-                            type="email"
-                            placeholder="you@kiet.edu"
-                            value={form.email}
-                            onChange={handleChange}
-                          />
-                          {errors.email && <span className="reg-error">{errors.email}</span>}
-                        </div>
-
-                        <div className="reg-field">
-                          <label className="reg-label" htmlFor="whatsapp">WhatsApp Number</label>
-                          <input
-                            className="reg-input"
-                            id="whatsapp"
-                            name="whatsapp"
-                            type="tel"
-                            placeholder="+91 XXXXX XXXXX"
-                            value={form.whatsapp}
-                            onChange={handleChange}
-                          />
-                          {errors.whatsapp && <span className="reg-error">{errors.whatsapp}</span>}
-                        </div>
-
-                        <div className="reg-field">
-                          <label className="reg-label" htmlFor="accommodation">Mode of Accommodation</label>
-                          <select
-                            className="reg-select"
-                            id="accommodation"
-                            name="accommodation"
-                            value={form.accommodation}
-                            onChange={handleChange}
-                          >
-                            <option value="">Select accommodation</option>
-                            {ACCOMMODATIONS.map((opt) => (
-                              <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                          {errors.accommodation && <span className="reg-error">{errors.accommodation}</span>}
-                        </div>
-
-                        <div className="reg-field">
-                          <label className="reg-label" htmlFor="joinGroup">Did you join our WhatsApp group?</label>
-                          <select
-                            className="reg-select"
-                            id="joinGroup"
-                            name="joinGroup"
-                            value={form.joinGroup}
-                            onChange={handleChange}
-                          >
-                            <option value="">Select</option>
-                            {JOIN_GROUP_OPTIONS.map((opt) => (
-                              <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                          {errors.joinGroup && <span className="reg-error">{errors.joinGroup}</span>}
-                        </div>
-
-                        <a
-                          className="reg-whatsapp-btn"
-                          href={WHATSAPP_GROUP_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                      <div className="reg-field">
+                        <label className="reg-label" htmlFor="branch">Branch</label>
+                        <select
+                          className="reg-select"
+                          id="branch"
+                          name="branch"
+                          value={form.branch}
+                          onChange={handleChange}
                         >
-                          Join WhatsApp Group
-                        </a>
+                          <option value="">Select Branch</option>
+                          {BRANCHES.map((b) => (
+                            <option key={b.code} value={b.code}>{b.label}</option>
+                          ))}
+                        </select>
                       </div>
 
-                      <button type="button" className="register-submit" onClick={nextStep}>
-                        Continue →
-                      </button>
-                    </form>
-                  </div>
-                )}
-
-                {/* Step 2 — Scan to pay */}
-                {step === 2 && (
-                  <div className="register-side reg-step">
-                    <div className="qr-panel">
-                      <div className="qr-panel-header">
-                        <span className="qr-status-dot" />
-                        <span className="qr-panel-title">SCAN TO PAY</span>
+                      <div className="reg-field">
+                        <label className="reg-label" htmlFor="email">KIET Email ID</label>
+                        <input
+                          className="reg-input"
+                          id="email"
+                          name="email"
+                          type="email"
+                          placeholder="you@kiet.edu"
+                          value={form.email}
+                          onChange={handleChange}
+                        />
+                        {errors.email && <span className="reg-error">{errors.email}</span>}
                       </div>
 
-                      <div className="qr-frame">
-                        <img className="qr-canvas" src="/assets/qr.png" alt="UPI payment QR code" />
-                        <span className="qr-scanline" />
-                        <span className="qr-corner qr-corner-tl" />
-                        <span className="qr-corner qr-corner-tr" />
-                        <span className="qr-corner qr-corner-bl" />
-                        <span className="qr-corner qr-corner-br" />
+                      <div className="reg-field">
+                        <label className="reg-label" htmlFor="whatsapp">WhatsApp Number</label>
+                        <input
+                          className="reg-input"
+                          id="whatsapp"
+                          name="whatsapp"
+                          type="tel"
+                          placeholder="+91 XXXXX XXXXX"
+                          value={form.whatsapp}
+                          onChange={handleChange}
+                        />
+                        {errors.whatsapp && <span className="reg-error">{errors.whatsapp}</span>}
                       </div>
 
-                      <p className="qr-panel-sub">
-                        <DecryptedText text="SCAN THE CODE" speed={30} />
-                      </p>
-                      <p className="qr-panel-desc">
-                        Complete your payment via any UPI app, then upload the screenshot in the form.
-                      </p>
-
-                      <div className="reg-nav">
-                        <button type="button" className="reg-back" onClick={prevStep}>← Back</button>
-                        <button type="button" className="register-submit reg-nav-next" onClick={nextStep}>
-                          Continue →
-                        </button>
+                      <div className="reg-field">
+                        <label className="reg-label" htmlFor="accommodation">Mode of Accommodation</label>
+                        <select
+                          className="reg-select"
+                          id="accommodation"
+                          name="accommodation"
+                          value={form.accommodation}
+                          onChange={handleChange}
+                        >
+                          <option value="">Select accommodation</option>
+                          {ACCOMMODATIONS.map((opt) => (
+                            <option key={opt} value={opt}>{opt}</option>
+                          ))}
+                        </select>
+                        {errors.accommodation && <span className="reg-error">{errors.accommodation}</span>}
                       </div>
+
+                      <div className="reg-field">
+                        <label className="reg-label" htmlFor="joinGroup">Did you join our WhatsApp group?</label>
+                        <select
+                          className="reg-select"
+                          id="joinGroup"
+                          name="joinGroup"
+                          value={form.joinGroup}
+                          onChange={handleChange}
+                        >
+                          <option value="">Select</option>
+                          {JOIN_GROUP_OPTIONS.map((opt) => (
+                            <option key={opt} value={opt}>{opt}</option>
+                          ))}
+                        </select>
+                        {errors.joinGroup && <span className="reg-error">{errors.joinGroup}</span>}
+                      </div>
+
+                      <a
+                        className="reg-whatsapp-btn"
+                        href={WHATSAPP_GROUP_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Join WhatsApp Group
+                      </a>
                     </div>
-                  </div>
-                )}
 
-                {/* Step 3 — Payment */}
-                {step === 3 && (
-                  <div className="register-form-card reg-step">
-                    <form onSubmit={handleSubmit} noValidate>
-                      <div className="reg-section">
-                        <div className="reg-section-header">
-                          <span className="reg-section-index">02</span>
-                          <h3 className="reg-section-title">Payment Details</h3>
-                        </div>
-
-                        <div className="reg-field">
-                          <label className="reg-label" htmlFor="screenshot">Payment Screenshot</label>
-                          <div className="reg-file-wrap">
-                            <label className="reg-file" htmlFor="screenshot">
-                              {preview ? "Change screenshot" : "Upload payment screenshot"}
-                            </label>
-                            <input
-                              className="reg-file-input"
-                              id="screenshot"
-                              name="screenshot"
-                              type="file"
-                              accept="image/*"
-                              onChange={handleFile}
-                            />
-                          </div>
-                          {preview && (
-                            <div className="reg-preview">
-                              <img src={preview} alt="Payment screenshot preview" />
-                            </div>
-                          )}
-                          {errors.screenshot && <span className="reg-error">{errors.screenshot}</span>}
-                        </div>
-
-                      </div>
-
-                      {serverError && <span className="reg-error">{serverError}</span>}
-                      <div className="reg-nav">
-                        <button type="button" className="reg-back" onClick={prevStep}>← Back</button>
-                        <button type="submit" className="register-submit reg-nav-next" disabled={submitting}>
-                          {submitting ? "Submitting…" : "Register Now"}
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                )}
+                    {serverError && <span className="reg-error">{serverError}</span>}
+                    <button type="submit" className="register-submit" disabled={submitting}>
+                      {submitting ? "Submitting…" : "Register Now"}
+                    </button>
+                  </form>
+                </div>
               </>
             )}
           </div>

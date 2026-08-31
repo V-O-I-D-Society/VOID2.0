@@ -1,24 +1,12 @@
 import { Router } from 'express';
-import multer from 'multer';
 import { query } from './db.js';
 import { validateRegistration } from './validate.js';
 import { loginHandler, requireAdmin } from './auth.js';
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    if (/^image\/(png|jpe?g|webp|gif)$/.test(file.mimetype)) cb(null, true);
-    else cb(new Error('Only image files are allowed.'));
-  },
-});
-
-const toBase64DataUrl = (buf, mimetype) => `data:${mimetype};base64,${buf.toString('base64')}`;
-
 export const router = Router();
 
 // Public: submit a registration.
-router.post('/register', upload.single('screenshot'), async (req, res) => {
+router.post('/register', async (req, res) => {
   const fields = {
     name: (req.body.name || '').trim(),
     branch: (req.body.branch || '').trim(),
@@ -28,20 +16,17 @@ router.post('/register', upload.single('screenshot'), async (req, res) => {
   };
 
   const errors = validateRegistration(fields);
-  if (!req.file) errors.screenshot = 'Payment screenshot is required.';
   if (Object.keys(errors).length > 0) {
     return res.status(422).json({ errors });
   }
 
-  const screenshot = toBase64DataUrl(req.file.buffer, req.file.mimetype);
-
   try {
     const result = await query(
-      `INSERT INTO registrations (name, branch, email, whatsapp, accommodation, screenshot)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO registrations (name, branch, email, whatsapp, accommodation)
+       VALUES ($1, $2, $3, $4, $5)
        ON CONFLICT (email) DO NOTHING
        RETURNING id`,
-      [fields.name, fields.branch, fields.email, fields.whatsapp, fields.accommodation, screenshot],
+      [fields.name, fields.branch, fields.email, fields.whatsapp, fields.accommodation],
     );
     if (!result.rowCount) {
       return res.status(409).json({ errors: { email: 'This email is already registered.' } });
@@ -61,7 +46,7 @@ router.get('/admin/verify', requireAdmin, (_req, res) => res.json({ valid: true 
 router.get('/registrations', requireAdmin, async (_req, res) => {
   try {
     const result = await query(
-      `SELECT id, name, branch, email, whatsapp, accommodation, screenshot, created_at
+      `SELECT id, name, branch, email, whatsapp, accommodation, created_at
        FROM registrations
        ORDER BY created_at DESC`,
     );
