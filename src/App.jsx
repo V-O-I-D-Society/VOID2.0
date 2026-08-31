@@ -21,12 +21,30 @@ const PanelSight = lazy(() => import('./pages/panelSight.jsx'));
 const LOADER_KEY = 'void_loader_seen';
 const LOADER_WINDOW_MS = 30 * 60 * 1000; // 30 min
 
+// localStorage can throw (private mode, strict privacy settings, sandboxed
+// frames). A thrown SecurityError on mount would unmount the whole tree and
+// white-screen the app, so all storage access is guarded.
+const safeRead = (key) => {
+  try {
+    return localStorage.getItem(key) || '';
+  } catch {
+    return '';
+  }
+};
+const safeWrite = (key, value) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* storage unavailable — best effort */
+  }
+};
+
 function App() {
   const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
     const now = Date.now();
-    const last = Number(localStorage.getItem(LOADER_KEY) || 0);
+    const last = Number(safeRead(LOADER_KEY) || 0);
     // Show only on first visit, or when the previous visit was more than 30 min ago.
     if (!last || now - last > LOADER_WINDOW_MS) {
       setShowLoader(true);
@@ -34,7 +52,7 @@ function App() {
   }, []);
 
   const handleLoaderDone = () => {
-    localStorage.setItem(LOADER_KEY, String(Date.now()));
+    safeWrite(LOADER_KEY, String(Date.now()));
     setShowLoader(false);
   };
 

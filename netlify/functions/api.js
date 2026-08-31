@@ -6,6 +6,14 @@
 const BACKEND = process.env.BACKEND_URL;
 
 export const handler = async (event) => {
+  if (!BACKEND) {
+    return {
+      statusCode: 500,
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ error: 'BACKEND_URL is not configured on the server' }),
+    };
+  }
+
   // Reconstruct the backend path from the original request path.
   let path = event.path || '/';
   path = path.replace(/^\/api/, '').replace(/^\/\.netlify\/functions\/api/, '');
