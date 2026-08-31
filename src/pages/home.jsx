@@ -9,9 +9,6 @@ import nullkiet from "./../assets/HS/achievements/Null-Ghaziabad.jpg";
 import nullmeetup from "./../assets/HS/achievements/Null-meetup.jpg";
 import school from "./../assets/HS/achievements/School.jpg";
 import LinuxBootcamp from "./../assets/HS/achievements/LinuxBootcamp.jpg";
-import nullLogo from "./../assets/Null.png";
-import cyndiaLogo from "./../assets/cyndia.svg";
-import piratesLogo from "./../assets/HS/Pirates.png";
 import alumni from "./../assets/HS/Alumni.jpg";
 import rnb from "./../assets/achievements/RednBlue.webp";
 import Secure from "./../assets/achievements/CyberSecure.webp";
@@ -534,33 +531,10 @@ export default function VoidPage() {
         </div>
       </section>
 
-      {/* Our Partners Section */}
-      <section className="partners-section">
-        <h2 className="section-title">Our Community partners</h2>
-        <p className="section-subtitle">
-          Collaborating with the best to foster a thriving cybersecurity
-          ecosystem.
-        </p>
-        <div className="partners-grid">
-          <PartnerCard
-            name="Null Community"
-            description="India's largest open security community."
-            imageUrl={nullLogo}
-            link="https://null.community/"
-          />
-          <PartnerCard
-            name="Cyndia"
-            description="Your partner in cyber defense and intelligence."
-            imageUrl={cyndiaLogo}
-            customClassName="cyndia-card"
-            link="https://cyndia.in/"
-          />
-          <PartnerCard
-            name="0x0 Pirates"
-            description="A community for hackers, by hackers, focusing on practical cybersecurity skills."
-            imageUrl={piratesLogo}
-            link="https://www.0x0pirates.com/chapters/kiet"
-          />
+      <section className="coming-soon-section">
+        <div className="coming-soon-shell">
+          <h2 className="coming-soon-heading">Community Partners</h2>
+          <h3 className="coming-soon-title">COMING SOON</h3>
         </div>
       </section>
       <Footer />

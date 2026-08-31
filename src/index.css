@@ -2851,3 +2851,81 @@ img {
   content-visibility: auto;
   contain-intrinsic-size: auto 900px;
 }
+
+.coming-soon-section {
+  background: transparent;
+  padding: 5rem 1rem;
+  text-align: center;
+}
+
+.coming-soon-shell {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+
+.coming-soon-heading {
+  margin-bottom: 1.4rem;
+  font-family: "CustomClubFont", system-ui, sans-serif;
+  font-size: clamp(1.65rem, 3.3vw, 2.7rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #ffffff 12%,
+    #ffd6d6 32%,
+    #ff5a5a 62%,
+    #ff0000 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.coming-soon-title {
+  font-family: "Anurati", "CustomClubFont", "Orbitron", system-ui, sans-serif;
+  font-size: clamp(2.2rem, 7.4vw, 5.6rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.14;
+  padding: 0.1em 0 0.14em;
+  background: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #ffffff 10%,
+    #c9fbff 30%,
+    #43dfff 55%,
+    #009dff 78%,
+    #0057ff 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+
+
+
+@media (max-width: 768px) {
+  .coming-soon-section {
+    padding: 4rem 1rem;
+  }
+
+  .coming-soon-shell {
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .coming-soon-title {
+    letter-spacing: 0.1em;
+  }
+}
+
