@@ -12,11 +12,19 @@ if (missing.length) {
   process.exit(1);
 }
 
+// FRONTEND_ORIGIN accepts a comma-separated list of allowed origins so the
+// backend can be reached from both the local dev server and deployed frontends.
+const parseOrigins = (raw) =>
+  String(raw || 'http://localhost:5173')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
 export const config = {
   port: Number(process.env.PORT || 8080),
   databaseUrl: process.env.DATABASE_URL,
   adminPassword: process.env.ADMIN_PASSWORD,
   authSecret: process.env.AUTH_SECRET,
-  frontendOrigin: process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
+  frontendOrigins: parseOrigins(process.env.FRONTEND_ORIGIN),
   tokenTtlMs: 60 * 60 * 1000, // 1h
 };

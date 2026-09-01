@@ -14,7 +14,7 @@ setInterval(() => {
 const app = express();
 app.disable('x-powered-by');
 app.use(helmet());
-app.use(cors({ origin: config.frontendOrigin }));
+app.use(cors({ origin: config.frontendOrigins }));
 app.use(express.json());
 
 app.use('/api', router);
