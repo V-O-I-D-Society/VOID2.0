@@ -419,22 +419,27 @@ function TerminalComponent() {
     setHistoryIndex(null);
     setAuthPhase(null);
 
-    let resultLine = "Access denied.";
+    let resultLine = "";
     try {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-      if (res.status === 429) {
-        resultLine = "Too many attempts. Try again later.";
-      } else if (res.ok) {
+      if (res.ok) {
         const body = await res.json();
         sessionStorage.setItem("void_admin_token", body.token);
         resultLine = "Access granted.";
         setHistory((prev) => [...prev, { command: "", output: resultLine }]);
         setTimeout(() => { window.location.href = "/panel-sight"; }, 600);
         return;
+      }
+      // Surface the real reason from the server instead of a generic message.
+      try {
+        const body = await res.json();
+        resultLine = body.error || `Error ${res.status}.`;
+      } catch {
+        resultLine = `Error ${res.status}.`;
       }
     } catch {
       resultLine = "Network error.";
