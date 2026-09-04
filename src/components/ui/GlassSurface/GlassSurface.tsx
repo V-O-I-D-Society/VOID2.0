@@ -58,6 +58,18 @@ const useDarkMode = () => {
   return isDark;
 };
 
+// Touch-primary devices (phones/tablets) have far weaker GPUs than desktop
+// Chromium. The full-screen SVG displacement-map backdrop filter below is very
+// expensive to rasterize there, so we fall back to the plain CSS backdrop-filter.
+const useCoarsePointer = () => {
+  const [isCoarse] = useState(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
+    return window.matchMedia('(pointer: coarse)').matches;
+  });
+
+  return isCoarse;
+};
+
 const GlassSurface: React.FC<GlassSurfaceProps> = ({
   children,
   width = 200,
@@ -95,6 +107,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const gaussianBlurRef = useRef<SVGFEGaussianBlurElement>(null);
 
   const isDarkMode = useDarkMode();
+  const isCoarsePointer = useCoarsePointer();
 
   const generateDisplacementMap = () => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -218,7 +231,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 
     const backdropFilterSupported = supportsBackdropFilter();
 
-    if (svgSupported) {
+    if (svgSupported && !isCoarsePointer) {
       return {
         ...baseStyles,
         background: isDarkMode ? `hsl(0 0% 0% / ${backgroundOpacity})` : `hsl(0 0% 100% / ${backgroundOpacity})`,
