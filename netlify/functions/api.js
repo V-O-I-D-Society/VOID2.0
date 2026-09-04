@@ -3,7 +3,12 @@
 // do not support POST (they return 405), so API traffic is proxied through a
 // Netlify Function instead, which forwards the original method and body.
 
-const BACKEND = process.env.BACKEND_URL;
+// Normalize BACKEND_URL so it tolerates a bare hostname (no scheme) and a
+// trailing slash, e.g. "void20-production.up.railway.app/" -> "https://void20-production.up.railway.app".
+const rawBackend = process.env.BACKEND_URL || '';
+const BACKEND = rawBackend
+  ? rawBackend.replace(/\/+$/, '').replace(/^(?!https?:\/\/)/i, 'https://')
+  : '';
 
 export const handler = async (event) => {
   if (!BACKEND) {
