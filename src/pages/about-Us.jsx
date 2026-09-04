@@ -5,20 +5,24 @@ import Footer from "./../components/footer";
 import { Link } from 'react-router-dom';
 import Suryansh from './../assets/Members/Suryansh.webp'
 import Kanishka from './../assets/Members/Kanishka.webp'
+import Abhishek from './../assets/Members/Abhishek.jpeg'
 import Ambar from './../assets/Members/Ambar.webp'
 import Raj from './../assets/HS/Members/Raj.jpg'
 import Keshav from './../assets/Members/Keshav.webp'
-import Aditya from './../assets/HS/Members/Tyagi.png'
-import Vanisha from './../assets/Members/Vanisha.webp'
 import Parkhi from './../assets/Members/Parkhi.webp'
 import Divya from './../assets/HS/Members/Divya.jpg'
-import Vansh from './../assets/HS/Members/Vansh.jpg'
 import Krishna from './../assets/HS/Members/Krishna.png'
 // import Subham from './../assets/Members/Subham.png'
-import nikhil from './../assets/HS/Members/Nikhil.jpg'
 import yuvraj from './../assets/Members/Yuvraj.webp'
-import asna from './../assets/Members/Asna.webp'
 import vishal from './../assets/HS/Members/Vishal.png'
+import AnmolSecond from './../assets/Members/SecondYear/Anmol.jpeg'
+import AzaanSecond from './../assets/Members/SecondYear/Azaan.jpeg'
+import HimanshuSecond from './../assets/Members/SecondYear/Himanshu.jpeg'
+import KanishkaSecond from './../assets/Members/SecondYear/Kanishka.jpeg'
+import KinshukSecond from './../assets/Members/SecondYear/Kinshuk.jpeg'
+import KushagraSecond from './../assets/Members/SecondYear/Kushagra.jpeg'
+import ShubhSecond from './../assets/Members/SecondYear/Shubh.jpeg'
+import PlaceholderMember from './../assets/Members/SecondYear/placeholder.svg'
 // import arpit from './../assets/Members/arpit.png'
 // Custom Hook for observing elements and adding a 'visible' class
 const useAnimateOnScroll = (options) => {
@@ -60,13 +64,25 @@ const FeatureCard = ({ icon, title, description }) => {
   );
 };
 
-const TeamMemberCard = ({ name, role, imageUrl }) => {
+const secondYearMembers = [
+  { name: 'Anant Awasthi', imageUrl: PlaceholderMember },
+  { name: 'Azaan Hussain', imageUrl: AzaanSecond },
+  { name: 'Kanishka Jain', imageUrl: KanishkaSecond },
+  { name: 'Himanshu Singh', imageUrl: HimanshuSecond },
+  { name: 'Kinshuk Agarwal', imageUrl: KinshukSecond },
+  { name: 'Kushagra Kaushik', imageUrl: KushagraSecond },
+  { name: 'Shubh Agarwal', imageUrl: ShubhSecond },
+  { name: 'Shreya Singh', imageUrl: PlaceholderMember },
+  { name: 'Anmol Singhal', imageUrl: AnmolSecond },
+]
+
+const TeamMemberCard = ({ name, role, imageUrl, className = '' }) => {
     const ref = useAnimateOnScroll({ threshold: 0.3, triggerOnce: true });
     return (
-        <div ref={ref} className="team-member-card fade-in-up">
+        <div ref={ref} className={`team-member-card fade-in-up ${className}`}>
             <img src={imageUrl} alt={name} className="team-member-img" />
             <h4 className="team-member-name">{name}</h4>
-            <p className="team-member-role">{role}</p>
+            {role && <p className="team-member-role">{role}</p>}
         </div>
     );
 };
@@ -89,20 +105,16 @@ export default function AboutUs() {
   const teamMembers = [
     { name: 'Ambar Chakravartty', role: 'President', imageUrl: Ambar },
     { name: 'Kanishka', role: 'President', imageUrl: Kanishka },
+    { name: 'Abhishek Kumar', imageUrl: Abhishek },
   ];
   const coreMembers = [
     { name: 'Raj Ojha', imageUrl: Raj },
     { name: 'Keshav Agarwal', imageUrl: Keshav },
-    { name: 'Aditya Tyagi', imageUrl: Aditya },
     { name: 'Parkhi Sharma', imageUrl: Parkhi },
     { name: 'Krishna Kumar', imageUrl: Krishna },
     { name: 'Yuvraj Patel', imageUrl: yuvraj },
-    { name: 'Asna Ali', imageUrl: asna },
-    { name: 'Nikhil Kumar', imageUrl: nikhil },
     { name: 'Vishal Prajapati', imageUrl: vishal },
-    { name: 'Vansh Agarwal', imageUrl: Vansh },
     { name: 'Divya Pal', imageUrl: Divya },
-    { name: 'Vanisha Agrawal', imageUrl: Vanisha },
   ];
 
   return (
@@ -144,28 +156,66 @@ export default function AboutUs() {
           {/* Presidents */}
           <div className="team-grid">
             {teamMembers.map((member, index) => (
-              <TeamMemberCard key={index} {...member} />
+              <TeamMemberCard key={index} {...member} className={member.name === 'Divya Pal' ? 'center-last-member' : ''} />
             ))}
           </div>
 
           {/* Core Members with Photos */}
-          <h2 ref={teamHeaderRef} className="section-title fade-in-up">Meet The Team</h2>
-
-          <div className="team-grid">
+          <h2 ref={teamHeaderRef} className="section-title fade-in-up" style={{ marginTop: "4rem" }}>Meet The Team</h2>
+          <h3
+            style={{
+              marginTop: "1.5rem",
+              marginBottom: "2.5rem",
+              textAlign: "center",
+              color: "#3b82f6",
+              fontSize: "2rem",
+              fontWeight: "700"
+            }}
+          >
+            3rd Year
+          </h3>
+          <div className="team-grid team-core-grid">
             {coreMembers.map((member, index) => (
-              <TeamMemberCard key={index} {...member} />
+              <TeamMemberCard key={index} {...member} className={member.name === 'Divya Pal' ? 'center-last-member' : ''} />
             ))}
           </div>
+          <h3
+            style={{
+              marginTop: "4rem",
+              marginBottom: "2.5rem",
+              textAlign: "center",
+              color: "#3b82f6",
+              fontSize: "2rem",
+              fontWeight: "700"
+            }}
+          >
+            2nd Year
+          </h3>
+
+          <div className="team-grid second-year-grid">
+            {secondYearMembers.map((member, index) => (
+              <TeamMemberCard key={`second-${index}`} {...member} />
+            ))}
+          </div>
+
         </section>
 
-        <section ref={joinRef} className="about-join-us fade-in">
-          <h2 className="section-title">Ready to Enter the Void?</h2>
-          <p className="section-content">Become part of a community that challenges the status quo.</p>
-          <div className="join-us-actions">
-            <button className="join-us-button bg-gray-600 cursor-not-allowed" disabled aria-disabled="true" style={{ opacity: 0.8 }}>
+                        <section className="cta-section fixed-register-cta">
+          <h2>Ready to Enter the Void?</h2>
+
+          <p>
+            Become part of a community that challenges the status quo.
+          </p>
+
+          <div className="register-button-wrap">
+            <a
+              href="https://register.void-society.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="register-button"
+            >
               Register Now
-            </button>
-            <span style={{ marginLeft: '0.75rem', color: '#d1d5db', fontWeight: 600 }}>- Registrations closed</span>
+            </a>
           </div>
         </section>
       </div>
