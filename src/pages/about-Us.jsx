@@ -105,12 +105,12 @@ export default function AboutUs() {
   const teamMembers = [
     { name: 'Ambar Chakravartty', role: 'President', imageUrl: Ambar },
     { name: 'Kanishka', role: 'President', imageUrl: Kanishka },
-    { name: 'Abhishek Kumar', imageUrl: Abhishek },
+    { name: 'Abhishek Kumar', role: 'Sr. Developer', imageUrl: Abhishek },
   ];
   const coreMembers = [
+    { name: 'Keshav Agarwal', role: 'Chief Admin', imageUrl: Keshav },
+    { name: 'Parkhi Sharma', role: 'Chief Admin', imageUrl: Parkhi },
     { name: 'Raj Ojha', imageUrl: Raj },
-    { name: 'Keshav Agarwal', imageUrl: Keshav },
-    { name: 'Parkhi Sharma', imageUrl: Parkhi },
     { name: 'Krishna Kumar', imageUrl: Krishna },
     { name: 'Yuvraj Patel', imageUrl: yuvraj },
     { name: 'Vishal Prajapati', imageUrl: vishal },
