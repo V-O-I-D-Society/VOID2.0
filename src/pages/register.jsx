@@ -1,15 +1,20 @@
-import React, { useState } from "react";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
+import React, { Suspense, useState } from "react";
+import RegisterHeader from "../components/RegisterHeader";
 import DarkVeil from "../components/ui/DarkVeil";
 import Shuffle from "../components/ui/Shuffle";
 import DecryptedText from "../components/ui/DecryptedText";
+import { isRegisterOnlyHost } from "../registerHost";
+
+// Navbar/Footer pull in GSAP, the dock and the staggered menu — not needed on
+// the register-only subdomain, so lazy-load them and never fetch them there.
+const Navbar = React.lazy(() => import("../components/navbar"));
+const Footer = React.lazy(() => import("../components/footer"));
 
 const ACCOMMODATIONS = ["Hosteller", "Outside"];
 
 const JOIN_GROUP_OPTIONS = ["Yes", "No"];
 
-const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/YOUR_GROUP_LINK"; // TODO: replace with actual group invite link
+const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/GDDRziM0jwpFOr7jkTmGQj";
 
 const BRANCHES = [
   { code: "CSE", label: "CSE — Computer Science & Engineering" },
@@ -47,6 +52,10 @@ const initialState = {
 };
 
 export default function Register() {
+  // On register.void-society.in show only the VOID logo (no site nav) and drop
+  // the footer so visitors cannot navigate to the rest of the site.
+  const registerOnly = isRegisterOnlyHost();
+
   const [form, setForm] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -138,8 +147,10 @@ export default function Register() {
 
   return (
     <>
-      <Navbar />
-      <div className="register-page">
+      <Suspense fallback={null}>
+        {registerOnly ? <RegisterHeader /> : <Navbar />}
+      </Suspense>
+      <div className={registerOnly ? "register-page register-page--standalone" : "register-page"}>
         <div className="register-bg">
           <DarkVeil hueShift={40} noiseIntensity={0.25} scanlineIntensity={0.15} speed={0.45} />
         </div>
@@ -307,7 +318,11 @@ export default function Register() {
           </div>
         </div>
       </div>
-      <Footer />
+      {!registerOnly && (
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
+      )}
     </>
   );
 }
